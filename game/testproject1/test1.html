@@ -91,7 +91,7 @@
 
 
 				move_direction(){				//방향키중 뭘눌렀는지 확인
-					$(document).keydown((event) => { 
+					document.addEventListener('keydown',(event)=>{
 						const code = {38:"up", 40:"down", 39:"right",37:"left"}
 						let direction = code[event.keyCode]
 						if (direction ==="up"){
@@ -115,9 +115,10 @@
 								this.screen_x+=1
 							}
 						}
-						console.log(this.screen_x,this.screen_y)
-					})
-				}
+						//console.log(this.screen_x,this.screen_y)
+					},)
+				} 
+ 
 
 				m_move_direction(){
 					document.getElementById("canvas").addEventListener('touchstart',(e)=>{
@@ -186,10 +187,10 @@
 				//	console.log(this.now_screen_x,this.now_screen_y)
 				}
 
-				blue_thing_1(){
+				blue_thing_1(num){
 					const ctx = this.ctx
-					let blue_thing_1_x = 17
-					let blue_thing_1_y = 17
+					let blue_thing_1_x =Math.round(Math.random()*80+10)
+					let blue_thing_1_y =Math.round(Math.random()*80+10)
 					let blocksize = this.blocksize
 					let backcolor = this.place[blue_thing_1_x][blue_thing_1_y]
 					let blue_thing_1_x_past = 0 
@@ -199,13 +200,14 @@
 					setInterval(() => {
 						direction = Math.ceil(Math.random()*4)
 
-					},400)
+					},300)
 					setInterval(() => {
 						blue_thing_1_y_past = blue_thing_1_y
 						blue_thing_1_x_past = blue_thing_1_x
+						//console.log(num,blue_thing_1_x, blue_thing_1_y)
 						if (direction === 1){
 							blue_thing_1_x+=1
-							if(blue_thing_1_x>80){
+							if(blue_thing_1_x>90){
 								blue_thing_1_x-=1
 							}
 						}else if (direction === 2){
@@ -215,7 +217,7 @@
 							}
 						}else if (direction === 3){
 							blue_thing_1_y += 1
-							if(blue_thing_1_y>80){
+							if(blue_thing_1_y>90){
 								blue_thing_1_y-=1
 							}
 						}else if (direction === 4){
@@ -224,12 +226,19 @@
 								blue_thing_1_y+=1
 							}
 						}
-						this.place[blue_thing_1_x_past][blue_thing_1_y_past] = backcolor
-						backcolor = this.place[blue_thing_1_x][blue_thing_1_y]
-						this.place[blue_thing_1_x][blue_thing_1_y] ="blue"
+						if(this.place[blue_thing_1_x][blue_thing_1_y]==="blue"){
+							blue_thing_1_x = blue_thing_1_x_past
+							blue_thing_1_y = blue_thing_1_y_past
+						} else {
+							this.place[blue_thing_1_x_past][blue_thing_1_y_past] = backcolor
+							backcolor = this.place[blue_thing_1_x][blue_thing_1_y]
+							this.place[blue_thing_1_x][blue_thing_1_y] ="blue"
+							if (blue_thing_1_x===this.now_screen_x+10 && blue_thing_1_y === this.now_screen_y+10){
+								alert("삡")
+							}
+						}
 					},100)
 				}
-
 
 			}
 			// 해야하는것
@@ -238,12 +247,16 @@
 
 			const gamesetting = new Gamesetting
 			function main(){
+				bluenum = prompt("blue 개수")
 				gamesetting.makemap()
 				gamesetting.move_direction()
 				gamesetting.draw_backgroud()
 				gamesetting.enter()
 				gamesetting.bulid_map()
-				gamesetting.blue_thing_1()
+				for (let i = 0; i<bluenum;i++){
+					gamesetting.blue_thing_1(i)
+				}
+
 				gamesetting.m_move_direction()
 			}
 			main()
