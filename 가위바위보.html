@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+	<head>
+		<title> 가위바위보 </title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			button{width: 80px; height: 40px;}
+			hr.one{border: none; border: 2px dashed black;}
+		</style>
+	</head>
+
+	<body>
+		<select name="i" id="a" size="3">
+			<option value="scissors">가위</option>
+			<option value="rock">바위</option>
+			<option value="paper">보</option>
+		</select>
+		<select id="onoff" size="2">
+			<option value="computeroff">컴퓨터꺼짐</option>
+			<option value="computeron">컴퓨터켜짐</option>
+		</select>
+		<input type="button" id="select" value="선택">
+		<input type="button" id="answer" value="결과">
+		<p id="output"></p>
+
+
+		<hr class="one">
+		<button type="button" onclick="location.href='index.html'">back</button>
+
+	</body>
+
+	<script>
+		let playerlist = [] 								//플레이어가 낸것
+		let num = 1											//몇번째 플래이어인지
+		let choicelist = ["scissors","rock","paper"];		//비긴것을 확인하고 무엇을선택했는지 보기위해
+
+		let random = Math.ceil(Math.random()*3)					//컴퓨터가 낸것
+		let computer = random === 1 ? "scissors" : random === 2 ? "rock" : "paper"
+		alert(`p${num} 차례`)
+
+
+		//선택
+		document.getElementById("select").addEventListener("click",function(){
+			if (document.getElementById("a").value=="") {
+				alert("선택해주세요")
+			} else {
+				playerlist.push(document.getElementById("a").value)
+				if (choicelist.indexOf(document.getElementById("a").value) != -1){
+					choicelist.splice(choicelist.indexOf(document.getElementById("a").value),1)
+					console.log(choicelist)
+				}
+				document.getElementById("a").value = " "
+				num+=1
+				alert(`p${num} 차례 or 결과`)
+			}
+		})
+
+		//결과
+		document.getElementById("answer").addEventListener("click",function(){
+			let winandlose = []
+			let write = ""
+			let ifonnum = 0
+			if (document.getElementById("onoff").value === "computeron"){		//컴퓨터가있을때
+				playerlist.push(computer)
+				if (choicelist.indexOf(computer) != -1){
+					choicelist.splice(choicelist.indexOf(computer),1)
+					console.log(choicelist)
+				}
+			} 									//컴퓨텨가 없을때
+			if(choicelist.length===0 || choicelist.length===2){
+				if (playerlist.length < 2){
+				} else {
+					document.getElementById("output").innerHTML= "비겼습니다."
+					playerlist = [] 
+					num = 1
+					choicelist = ["scissors","rock","paper"]
+				}
+			} else {
+				if (choicelist[0]==="scissors"){
+					for (let i of playerlist){
+						if (i === "paper"){
+							winandlose.push("win")
+						} else if (i === "rock"){
+							winandlose.push("lose")
+						}
+					}
+				} else if (choicelist[0] ==="rock"){
+					for (let i of playerlist){
+						if (i === "scissors"){
+							winandlose.push("win")
+						} else if (i === "paper"){
+							winandlose.push("lose")
+						}
+					}
+				} else if (choicelist[0] ==="paper"){
+					for (let i of playerlist){
+						if (i === "rock"){
+							winandlose.push("win")
+						} else if (i === "scissors"){
+							winandlose.push("lose")
+						}
+					}
+				}
+				if (document.getElementById("onoff").value === "computeron"){
+					for (var i = 0; i < playerlist.length-1; i++){
+						write = write + `p${Number(i)+1} 는 ${playerlist[i] === "scissors" ? "가위": playerlist[i]=== "rock" ? "바위" : "보"}를 내서 ${winandlose[i] === "win" ? "이겼습니다" : "졌습니다."} <br>`
+						ifonnum = i+1
+					}
+					write = write + `컴퓨터 는 ${playerlist[ifonnum] === "scissors" ? "가위": playerlist[ifonnum]=== "rock" ? "바위" : "보"}를 내서 ${winandlose[ifonnum] === "win" ? "이겼습니다" : "졌습니다."} <br>`
+				} else {
+					for (var i = 0; i<playerlist.length;i++){
+						write = write + `p${Number(i)+1} 는 ${playerlist[i] === "scissors" ? "가위": playerlist[i]=== "rock" ? "바위" : "보"}를 내서 ${winandlose[i] === "win" ? "이겼습니다" : "졌습니다."} <br>`
+						ifonnum = i
+					}
+				}
+				write += "더 이용할겨면 바로 선택하면됩니다."
+				document.getElementById("output").innerHTML = write
+
+				playerlist = []
+				num = 1
+				choicelist = ["scissors","rock","paper"];
+
+				random = Math.ceil(Math.random()*3)
+				computer = random === 1 ? "scissors" : random === 2 ? "rock" : "paper"
+			}
+		})
+
+	</script>
+</html>

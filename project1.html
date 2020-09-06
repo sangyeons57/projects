@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+	<head>
+		<title> project로그인 </title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			label{
+				float: left;
+				width: 80px;
+			}
+			input,label{
+				display: block;
+				margin-bottom: 10px;
+			}
+			hr.one{border: none; border: 2px dashed black;}
+			button{width: 80px; height: 40px;}
+		</style>
+	</head>
+	<body>
+
+		<form name="frm">
+			<label for="myId">ID: </label>
+			<input type="text" id="myId" name="myId">
+			<label for="pwd">password:</label>
+			<input type="password" id="pwd" name="pwd">
+
+			<input type="button" name="send" value="로그인">
+			<input type="button" name="join" value="회원가입">
+		</form>
+
+
+		<script>
+			var frm = document.getElementsByName("frm")[0];
+
+		//	var frm = document.getElementsByName("frm")[0];
+		//	var frm = document.forms[0];		form 들줄 1변째
+		//	var frm = document.frm;		 frm 이름을 1개 만 가지고 있을대
+		//
+		// 3게 다 같다
+
+			var myId = frm.myId;
+			var pwd = frm.pwd;
+			var send_btn = document.frm.send;
+
+			//이후추가 회원가입-----------------
+			const checkin = frm.join;
+			let checkinlist = {}
+
+			checkin.onclick = function() {
+				checkinlist[myId.value] = pwd.value
+				console.log(checkinlist)
+				myId.value = ""; pwd.value = ""
+			}
+
+			//----------------------------------
+
+		//	send_btn.onclick= function(){
+		//		var newId = myId.value;
+		//		var newPwd = pwd.value;
+		//		if(newId == '' || newPwd == ''){
+		//			alert('아이디 또는 비밀번호 가 입력되지 않았습니다!')
+		//		} else {
+		//			alert(myId.value + '님 환영합니다.');
+		//		}
+		//	}
+
+			send_btn.onclick = function(){
+				if (pwd.value === checkinlist[myId.value]){
+					alert(`${myId.value}님 환영합니다.`)
+					myId.value = ""; pwd.value = ""
+				} else {
+					alert("잘못입력하셧습니다.")
+					myId.value = ""; pwd.value = ""
+				}
+			}
+		</script>
+		<hr class="one">
+		<button type="button" onclick="location.href='index.html'">back</button>
+	</body>
+</html>

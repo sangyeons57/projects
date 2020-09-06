@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+	<head>
+		<title> 터치 </title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			#box{
+				position: relative;
+				width: 100px; height: 100px;
+				border: 3px solid black;
+			}
+			hr.one{border: none; border: 2px dashed black;}
+			button{width: 80px; height: 40px;}
+		</style>
+	</head>
+	<body>
+		<h1>터치 이벤트</h1>
+		<div id="box">
+			<p>나를 터치해주세요</p>
+		</div>
+
+		<script>
+			var color_list = ["balck","blue","green","yellow","lime","skyblue","red","orange","gray","SpringGreen","blueviolet"]
+			var box = document.getElementById('box');
+			var s = 0
+
+			function numm (){
+				s +=1
+				if (s === 11){
+					s = 0
+				}
+			}
+
+			var touch = {
+				start: function(){
+					console.log("1")
+					box.innerHTML = 'box 건드렸군요!';
+					this.style.background = color_list[s];
+					numm()
+				},
+				end: function(){
+					console.log("2")
+					box.innerHTML = '손을 떼었군요!';
+				},
+				move: function(e){
+					console.log("3")
+					box.innerHTML = 'box 를 만지는 중입니다';
+					this.style.background = color_list[s];
+					numm()
+				}
+			}
+
+			console.log("0")
+			box.addEventListener('touchstart', touch.start);
+			box.addEventListener('touchend',touch.end);
+			box.addEventListener('touchmove', touch.move);
+		</script>
+
+		<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
+
+		<hr class="one">
+		<button type="button" onclick="location.href='index.html'">back</button>
+
+	</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>그림판</title>
+		<style>
+			button{width: 80px; height: 40px;}
+			hr.one{border: none; border: 2px dashed black;}
+		</style>
+	</head>
+
+	<body id="body">
+		<input type="number" id="px" style="width:30px;height: 12px;" value="5">펜크기 &nbsp;
+		<input type="color" id="color" style="width:20px;height: 17px;">color &nbsp;
+		<input type="button" id="clear"	style="width:50px;height:20px" value="clear">
+		<br>
+		<canvas id="canvas" width= "10" height = "10"></canvas>
+
+
+
+		<!--script-->
+		<script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+
+
+		<script>
+			let canvassize
+			var canvas = document.getElementById("canvas");
+			var ctx = canvas.getContext("2d")
+
+			//캔버스크기 맞추기
+			canvassize = [$(window).width()-15, $(window).height()-110]
+			document.getElementById("canvas").width = canvassize[0]
+			document.getElementById("canvas").height = canvassize[1]
+
+			function makecanvasline(){
+				const linewidth=4
+				ctx.fillRect(0,0,linewidth,(canvassize[1]))
+				ctx.fillRect(0,Number(canvassize[1])-linewidth,canvassize[0],linewidth)
+				ctx.fillRect(0,0,canvassize[0],linewidth)
+				ctx.fillRect(Number(canvassize[0])-linewidth,0,linewidth,Number(canvassize[1]))
+			}
+			//---------------------------------------------------------
+			
+			makecanvasline()
+
+			document.getElementById("clear").addEventListener("click",function(){
+				ctx.clearRect(0,0,canvassize[0],canvassize[1])
+				makecanvasline()
+			})
+
+
+			ctx.lineWidth= document.getElementById('px').value/7
+			ctx.strokeStyle=document.getElementById('color').value
+			setInterval(function(){
+				ctx.lineWidth= document.getElementById('px').value/7
+				ctx.strokeStyle=document.getElementById('color').value
+			},1000)
+
+		//	function f(e) {
+		//		ctx.beginPath()
+		//		ctx.arc(Math.round(e.touches[0].clientX)-5,Math.round(e.touches[0].clientY)-28,Number(document.getElementById("px").value),0,Math.PI*2,false)
+		//		ctx.fill();
+		//		console.log(e.touches)
+		//	}
+			//document.querySelector("canvas").addEventListener("touchstart", f)
+
+			let startx
+			let starty
+			let endx
+			let endy
+
+			function makeline(){
+				ctx.beginPath();
+				ctx.moveTo(startx,starty)
+				ctx.lineTo(endx,endy)
+				ctx.stroke()
+			}
+
+			function draw(e) {
+				startx = e.touches[0].clientX-8
+				starty = e.touches[0].clientY-32
+				setTimeout(() => {
+					endx = e.touches[0].clientX-8
+					endy = e.touches[0].clientY-32
+				}, 0);
+
+				makeline()
+			}
+
+
+			function drawstart(e){
+				startx = e.touches[0].clientX-8
+				starty = e.touches[0].clientY-32
+				setTimeout(() => {
+					endx = e.touches[0].clientX-8
+					endy = e.touches[0].clientY-32
+				}, 1);
+
+				makeline()
+			}
+
+			//function drawend(e){
+			//	ctx.beginPath()
+			//	ctx.moveTo(0,0)
+			//	ctx.lineTo(endx,endy)
+			//	//ctx.moveTo(0,0)
+			//	//ctx.lineTo(startx,starty)
+			//	ctx.stroke();
+			//}
+
+
+			document.querySelector("canvas").addEventListener("touchmove", draw)
+			document.querySelector("canvas").addEventListener("touchstart", drawstart)
+
+		</script>
+
+		<!--script-->
+
+		<hr class="one">
+		<button type="button" onclick="location.href='index.html'">back</button>
+
+	</body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+	<head>
+		<title> 글자받고입력 </title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			button{width: 80px; height: 40px;}
+			hr.one{border: none; border: 2px dashed black;}
+		</style>
+	</head>
+
+	<body>
+		<input type="text" id="input"><br>
+
+		<textarea id="output"></textarea>
+		<button onclick="input()">입력받기</button>
+		<button onclick="output()">출력받기</button>
+		<button onclick="returnvalue()">받고 출력</button>
+
+
+
+		<hr class="one">
+		<button type="button" onclick="location.href='/project/index.html'">back</button>
+	</body>
+
+	<script>
+		let temp
+		function input() {
+			let input = document.getElementById("input").value;
+			temp = input;
+		}
+
+		function output() {
+			document.getElementById("output").value = temp;
+		}
+
+		function returnvalue() {
+			document.getElementById("output").value = document.getElementById("input").value
+		}
+	</script>
+</html>
