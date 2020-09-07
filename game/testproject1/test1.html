@@ -11,6 +11,8 @@
 	</head>
 
 	<body id="body">
+		<pre id="count_blue_yellow">파랑색단횟수 : 5
+남은 노랑색 : 20</pre>
 		<canvas id="canvas" width="210" height="210"></canvas>
 
 		<!--script-->
@@ -44,7 +46,7 @@
 					this.now_screen_x = 0
 					this.now_screen_y = 0
 
-					this.count_blue_touch = 0
+					this.count_blue_touch = 5
 					this.count_yellow_touch=20
 				}
 
@@ -239,8 +241,12 @@
 							backcolor = this.place[blue_thing_1_x][blue_thing_1_y]
 							this.place[blue_thing_1_x][blue_thing_1_y] ="blue"
 							if (blue_thing_1_x===this.now_screen_x+10 && blue_thing_1_y === this.now_screen_y+10){
-								this.count_blue_touch+=1
-								alert(`삐빅  blue : ${this.count_blue_touch}   남은 yellow : ${this.count_yellow_touch}`)
+								this.count_blue_touch-=1
+								document.getElementById("count_blue_yellow").innerHTML=`파랑색단횟수 : ${this.count_blue_touch}
+남은 노랑색 : ${this.count_yellow_touch}`
+								if (this.count_blue_touch<0){
+									alert("에너지 0")
+								}
 							}
 						}
 					},100)
@@ -295,7 +301,8 @@
 								this.place[yellow_thing_1_x][yellow_thing_1_y] ="yellow"
 								if (yellow_thing_1_x===this.now_screen_x+10 && yellow_thing_1_y === this.now_screen_y+10){
 									this.count_yellow_touch-=1
-									alert(`삐빅  blue : ${this.count_blue_touch}   남은 yellow : ${this.count_yellow_touch}`)
+									document.getElementById("count_blue_yellow").innerHTML=`남은에너지 : ${this.count_blue_touch}
+남은 노랑색 : ${this.count_yellow_touch}`
 									check_touch =1
 									this.place[yellow_thing_1_x][yellow_thing_1_y] =backcolor
 								}
@@ -333,7 +340,7 @@
 		<!--script-->
 
 		<hr class="one">
-		<button type="button" onclick="location.href='index.html'">back</button>
+		<button type="button" onclick="location.href='/game/tes'">back</button>
 
 	</body>
 </html>
