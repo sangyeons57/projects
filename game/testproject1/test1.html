@@ -28,6 +28,8 @@
 				screen_y
 				now_screen_x
 				now_screen_y
+				count_blue_touch
+				count_yellow_touch
 				constructor(){
 					this.canvas = document.getElementById("canvas");
 					this.ctx = this.canvas.getContext("2d");
@@ -41,6 +43,9 @@
 
 					this.now_screen_x = 0
 					this.now_screen_y = 0
+
+					this.count_blue_touch = 0
+					this.count_yellow_touch=20
 				}
 
 				makemap(){		//맵만들기
@@ -187,7 +192,7 @@
 				//	console.log(this.now_screen_x,this.now_screen_y)
 				}
 
-				blue_thing_1(num){
+				blue_thing_1(){
 					const ctx = this.ctx
 					let blue_thing_1_x =Math.round(Math.random()*80+10)
 					let blue_thing_1_y =Math.round(Math.random()*80+10)
@@ -197,6 +202,7 @@
 					let blue_thing_1_y_past = 0 
 					let direction = 0
 					let blue_speed = 0
+					let count_blue_touch=0
 					setInterval(() => {
 						direction = Math.ceil(Math.random()*4)
 
@@ -204,7 +210,6 @@
 					setInterval(() => {
 						blue_thing_1_y_past = blue_thing_1_y
 						blue_thing_1_x_past = blue_thing_1_x
-						//console.log(num,blue_thing_1_x, blue_thing_1_y)
 						if (direction === 1){
 							blue_thing_1_x+=1
 							if(blue_thing_1_x>90){
@@ -226,7 +231,7 @@
 								blue_thing_1_y+=1
 							}
 						}
-						if(this.place[blue_thing_1_x][blue_thing_1_y]==="blue"){
+						if(this.place[blue_thing_1_x][blue_thing_1_y]==="blue" ||this.place[blue_thing_1_x][blue_thing_1_y]==="yellow"){
 							blue_thing_1_x = blue_thing_1_x_past
 							blue_thing_1_y = blue_thing_1_y_past
 						} else {
@@ -234,12 +239,71 @@
 							backcolor = this.place[blue_thing_1_x][blue_thing_1_y]
 							this.place[blue_thing_1_x][blue_thing_1_y] ="blue"
 							if (blue_thing_1_x===this.now_screen_x+10 && blue_thing_1_y === this.now_screen_y+10){
-								alert("삡")
+								this.count_blue_touch+=1
+								alert(`삐빅  blue : ${this.count_blue_touch}   남은 yellow : ${this.count_yellow_touch}`)
 							}
 						}
 					},100)
 				}
 
+				yellow_thing_1(){
+					const ctx = this.ctx
+					let yellow_thing_1_x =Math.round(Math.random()*80+10)
+					let yellow_thing_1_y =Math.round(Math.random()*80+10)
+					let blocksize = this.blocksize
+					let backcolor = this.place[yellow_thing_1_x][yellow_thing_1_y]
+					let yellow_thing_1_x_past = 0 
+					let yellow_thing_1_y_past = 0 
+					let direction = 0
+					let yellow_speed = 0
+					let check_touch= 0
+					setInterval(() => {
+						direction = Math.ceil(Math.random()*4)
+					},300)
+					setInterval(() => {
+						if(check_touch===0){
+							yellow_thing_1_y_past = yellow_thing_1_y
+							yellow_thing_1_x_past = yellow_thing_1_x
+							//console.log(num,blue_thing_1_x, blue_thing_1_y)
+							if (direction === 1){
+								yellow_thing_1_x+=1
+								if(yellow_thing_1_x>90){
+									yellow_thing_1_x-=1
+								}
+							}else if (direction === 2){
+								yellow_thing_1_x-=1
+								if(yellow_thing_1_x<10){
+									yellow_thing_1_x+=1
+								}
+							}else if (direction === 3){
+								yellow_thing_1_y += 1
+								if(yellow_thing_1_y>90){
+									yellow_thing_1_y-=1
+								}
+							}else if (direction === 4){
+								yellow_thing_1_y -= 1
+								if(yellow_thing_1_y<10){
+									yellow_thing_1_y+=1
+								}
+							}
+							if(this.place[yellow_thing_1_x][yellow_thing_1_y]==="yellow" ||this.place[yellow_thing_1_x][yellow_thing_1_y]==="blue"){
+								yellow_thing_1_x = yellow_thing_1_x_past
+								yellow_thing_1_y = yellow_thing_1_y_past
+							} else {
+								this.place[yellow_thing_1_x_past][yellow_thing_1_y_past] = backcolor
+								backcolor = this.place[yellow_thing_1_x][yellow_thing_1_y]
+								this.place[yellow_thing_1_x][yellow_thing_1_y] ="yellow"
+								if (yellow_thing_1_x===this.now_screen_x+10 && yellow_thing_1_y === this.now_screen_y+10){
+									this.count_yellow_touch-=1
+									alert(`삐빅  blue : ${this.count_blue_touch}   남은 yellow : ${this.count_yellow_touch}`)
+									check_touch =1
+									this.place[yellow_thing_1_x][yellow_thing_1_y] =backcolor
+								}
+							}
+						}else{
+						}
+					},100)
+				}
 			}
 			// 해야하는것
 			// x y 값을 만들고 움직일때마다 1씩  빼고 더하고
@@ -247,14 +311,16 @@
 
 			const gamesetting = new Gamesetting
 			function main(){
-				bluenum = prompt("blue 개수")
 				gamesetting.makemap()
 				gamesetting.move_direction()
 				gamesetting.draw_backgroud()
 				gamesetting.enter()
 				gamesetting.bulid_map()
-				for (let i = 0; i<bluenum;i++){
-					gamesetting.blue_thing_1(i)
+				for (let i = 0; i<100;i++){
+					gamesetting.blue_thing_1()
+				}
+				for (let i = 0; i<20;i++){
+					gamesetting.yellow_thing_1()
 				}
 
 				gamesetting.m_move_direction()
