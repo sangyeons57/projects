@@ -104,8 +104,10 @@
 
 				move_direction(){				//방향키중 뭘눌렀는지 확인
 					document.addEventListener('keydown',(event)=>{
-						const code = {38:"up", 40:"down", 39:"right",37:"left"}
-						let direction = code[event.keyCode]
+						const code = {ArrowUp:"up", ArrowDown:"down", ArrowRight:"right",ArrowLeft:"left"}
+						let direction = code[event.key]
+						console.log(event.key)
+						console.log(event.code)
 						if (direction ==="up"){
 							this.screen_y -= 1
 							if (this.screen_y<0){
