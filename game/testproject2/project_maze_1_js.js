@@ -38,6 +38,7 @@ class Gamesetting{
 	half_height
 
 	
+	CM
 	constructor(){
 
 		this.canvas = document.getElementById("canvas");
@@ -72,6 +73,7 @@ class Gamesetting{
 		this.half_height = Math.floor(this.canvas.height/this.blocksize/2)
 
 
+		this.CM="off"
 	}
 
 	makemap(){		//맵만들기
@@ -164,13 +166,11 @@ class Gamesetting{
 
 	//그림자 그리기
 	make_shadow(){
-		const onoff = document.getElementById("shadowOnOff")
-		if(onoff.value==="off"){
+		if(this.CM==="off"){
 			this.make_shadow_on()
-		} else if(onoff.value==="on"){
+		} else if(this.CM==="on"){
 			this.make_shadow_off()
 		}
-
 
 		const ctx = this.ctx
 		ctx.fillStyle = "black"
@@ -203,7 +203,7 @@ class Gamesetting{
 	make_shadow_on(){
 		this.make_wall_map()
 
-		this.place_shadow.map((column)=> column.fill(7,0,column.length))
+		this.place_shadow.map((column)=> column.fill(M.shadow,0,column.length))
 
 		let x = this.half_width;
 		let y = this.half_height;
@@ -216,7 +216,7 @@ class Gamesetting{
 		while (true) {
 
 			for(let i =this.half_height; i<down; i++){
-				this.place_shadow[x][i]= 0
+				this.place_shadow[x][i]= M.noWall
 				if (1===this.place_wall[x][i]){
 					down = i+1
 					break
@@ -224,7 +224,7 @@ class Gamesetting{
 			}
 
 			for(let i =this.half_height; i>up; i--){
-				this.place_shadow[x][i]= 0
+				this.place_shadow[x][i]= M.noWall
 				if (1===this.place_wall[x][i]){
 					up = i-1
 					break
@@ -233,7 +233,7 @@ class Gamesetting{
 
 			x+=1
 			if(x<this.canvas.width/this.blocksize-1){
-				this.place_shadow[x][y] = 0
+				this.place_shadow[x][y] = M.noWall
 			} else{
 				break
 			}
@@ -254,14 +254,14 @@ class Gamesetting{
 		while(true){
 
 			for(let i =this.half_height; i>up; i--){
-				this.place_shadow[x][i]= 0
+				this.place_shadow[x][i]= M.noWall
 				if (1===this.place_wall[x][i]){
 					up = i-1
 					break
 				}
 			}
 			for(let i =this.half_height; i<down; i++){
-				this.place_shadow[x][i]= 0
+				this.place_shadow[x][i]= M.noWall
 				if (1===this.place_wall[x][i]){
 					down = i+1
 					break
@@ -270,11 +270,8 @@ class Gamesetting{
 
 			x-=1
 			if(x>0){
-				this.place_shadow[x][y] = 0
+				this.place_shadow[x][y] = M.noWall
 			} else{
-				for(let i =this.half_height; i>up; i--){
-					this.place_shadow[x][i]= 0
-				}
 				break
 			}
 
@@ -292,7 +289,7 @@ class Gamesetting{
 		while(true){
 
 			for(let i = this.half_width; i>left; i--){
-				this.place_shadow[i][y]=0
+				this.place_shadow[i][y]=M.noWall
 				if (1===this.place_wall[i][y]){
 					left = i-1
 					break
@@ -300,7 +297,7 @@ class Gamesetting{
 			}
 
 			for(let i = this.half_width; i<right; i++){
-				this.place_shadow[i][y]=0
+				this.place_shadow[i][y]=M.noWall
 				if (1===this.place_wall[i][y]){
 					right = i+1
 					break
@@ -310,7 +307,7 @@ class Gamesetting{
 
 			y-=1
 			if(y>0){
-				this.place_shadow[x][y] = 0
+				this.place_shadow[x][y] = M.noWall
 			} else {
 				break
 			}
@@ -328,7 +325,7 @@ class Gamesetting{
 		while(true){
 
 			for(let i = this.half_width; i>left; i--){
-				this.place_shadow[i][y]=0
+				this.place_shadow[i][y]=M.wall
 				if (1===this.place_wall[i][y]){
 					left = i-1
 					break
@@ -336,7 +333,7 @@ class Gamesetting{
 			}
 
 			for(let i = this.half_width; i<right; i++){
-				this.place_shadow[i][y]=0
+				this.place_shadow[i][y]=M.wall
 				if (1===this.place_wall[i][y]){
 					right = i+1
 					break
@@ -346,7 +343,7 @@ class Gamesetting{
 
 			y+=1
 			if(y<this.canvas.height/this.blocksize-1){
-				this.place_shadow[x][y] = 0
+				this.place_shadow[x][y] = M.wall
 			} else {
 				break
 			}
@@ -437,72 +434,131 @@ class Gamesetting{
 
 	//핸드폰용 조작
 	m_move_direction(){
-		document.getElementById("canvas").addEventListener('touchstart',(e)=>{
-			let clientx =Math.round(e.touches[0].clientX)
-			let clienty =Math.round(e.touches[0].clientY)
+		let clientx_1 = 0
+		let clienty_1 = 0
+		let clientx_2 = 0
+		let clienty_2 = 0
 
-			if (clientx>160){
-				let judgment = 0
-				setInterval(() => {
-					document.getElementById("canvas").addEventListener('touchend',(e)=>{
-						judgment = 1
-					})
-					if (judgment ===0){
-						this.screen_x += 1
-						this.player_x += 1
-						if (this.place[this.player_x][this.player_y]==="gray"){
-							this.player_x -= 1
-							this.screen_x-=1
-						}
-					}
-				}, 100);
-			} else if(clientx<70){
-				let judgment = 0
-				setInterval(() => {
-					document.getElementById("canvas").addEventListener('touchend',(e)=>{
-						judgment = 1
-					})
-					if (judgment ===0){
-						this.screen_x -= 1
-						this.player_x -= 1
-						if (this.place[this.player_x][this.player_y]==="gray"){
-							this.screen_x+=1
-							this.player_x += 1
-						}
-					}
-				}, 100);
-			} else if(clienty>160){
-				let judgment = 0
-				setInterval(() => {
-					document.getElementById("canvas").addEventListener('touchend',(e)=>{
-						judgment = 1
-					})
-					if (judgment ===0){
-						this.screen_y += 1
-						this.player_y += 1
-						if (this.place[this.player_x][this.player_y]==="gray"){
-							this.screen_y-=1
-							this.player_y-=1
-						}
-					}
-				}, 100);
-			} else if(clienty<70){
-				let judgment = 0
-				setInterval(() => {
-					document.getElementById("canvas").addEventListener('touchend',(e)=>{
-						judgment = 1
-					})
-					if (judgment ===0){
-						this.screen_y -= 1
-						this.player_y-=1
-						if (this.place[this.player_x][this.player_y]==="gray"){
-							this.screen_y+=1
-							this.player_y+=1
-						}
-					}
-				}, 100);
-			}
+		document.getElementById("html").addEventListener('touchstart',(e)=>{
+			clientx_1 = Math.round(e.touches[0].clientX)
+			clienty_1 = Math.round(e.touches[0].clientY)
+			clientx_2 = Math.round(e.touches[0].clientX)
+			clienty_2 = Math.round(e.touches[0].clientY)
 		})
+
+		document.getElementById("html").addEventListener('touchmove', (e)=>{
+			clientx_2 = Math.round(e.touches[0].clientX)
+			clienty_2 = Math.round(e.touches[0].clientY)
+		})
+
+		let m_move=setInterval(() => {
+			if(Math.abs(clientx_1-clientx_2)<17){
+			} else if(clientx_1<clientx_2){
+				this.screen_x += 1
+				this.player_x += 1
+				if (this.place[this.player_x][this.player_y]==="gray"){
+					this.player_x -= 1
+					this.screen_x-=1
+				}
+			} else if(clientx_1>clientx_2) {
+				this.screen_x -= 1
+				this.player_x -= 1
+				if (this.place[this.player_x][this.player_y]==="gray"){
+					this.player_x += 1
+					this.screen_x += 1
+				}
+			} else {}
+
+			if(Math.abs(clienty_1-clienty_2)<17){
+			} else if(clienty_1<clienty_2){
+				this.screen_y += 1
+				this.player_y += 1
+				if (this.place[this.player_x][this.player_y]==="gray"){
+					this.player_y -= 1
+					this.screen_y -= 1
+				}
+			} else if(clienty_1>clienty_2) {
+				this.screen_y -= 1
+				this.player_y -= 1
+				if (this.place[this.player_x][this.player_y]==="gray"){
+					this.player_y += 1
+					this.screen_y += 1
+				}
+			} else {}
+		}, 100);
+
+		document.getElementById("html").addEventListener('touchend', (e)=>{
+			clientx_1 = 0
+			clienty_1 = 0
+			clientx_2 = 0
+			clienty_2 = 0
+		})
+	//	document.getElementById("canvas").addEventListener('touchstart',(e)=>{
+	//		let clientx =Math.round(e.touches[0].clientX)
+	//		let clienty =Math.round(e.touches[0].clientY)
+
+	//		if (clientx>160){
+	//			let judgment = 0
+	//			setInterval(() => {
+	//				document.getElementById("canvas").addEventListener('touchend',(e)=>{
+	//					judgment = 1
+	//				})
+	//				if (judgment ===0){
+	//					this.screen_x += 1
+	//					this.player_x += 1
+	//					if (this.place[this.player_x][this.player_y]==="gray"){
+	//						this.player_x -= 1
+	//						this.screen_x-=1
+	//					}
+	//				}
+	//			}, 100);
+	//		} else if(clientx<70){
+	//			let judgment = 0
+	//			setInterval(() => {
+	//				document.getElementById("canvas").addEventListener('touchend',(e)=>{
+	//					judgment = 1
+	//				})
+	//				if (judgment ===0){
+	//					this.screen_x -= 1
+	//					this.player_x -= 1
+	//					if (this.place[this.player_x][this.player_y]==="gray"){
+	//						this.screen_x+=1
+	//						this.player_x += 1
+	//					}
+	//				}
+	//			}, 100);
+	//		} else if(clienty>160){
+	//			let judgment = 0
+	//			setInterval(() => {
+	//				document.getElementById("canvas").addEventListener('touchend',(e)=>{
+	//					judgment = 1
+	//				})
+	//				if (judgment ===0){
+	//					this.screen_y += 1
+	//					this.player_y += 1
+	//					if (this.place[this.player_x][this.player_y]==="gray"){
+	//						this.screen_y-=1
+	//						this.player_y-=1
+	//					}
+	//				}
+	//			}, 100);
+	//		} else if(clienty<70){
+	//			let judgment = 0
+	//			setInterval(() => {
+	//				document.getElementById("canvas").addEventListener('touchend',(e)=>{
+	//					judgment = 1
+	//				})
+	//				if (judgment ===0){
+	//					this.screen_y -= 1
+	//					this.player_y-=1
+	//					if (this.place[this.player_x][this.player_y]==="gray"){
+	//						this.screen_y+=1
+	//						this.player_y+=1
+	//					}
+	//				}
+	//			}, 100);
+	//		}
+	//	})
 	}
 
 	//태두리 그리기
@@ -519,7 +575,6 @@ class Gamesetting{
 
 	enter(){		//그리기
 		setInterval(() => {
-
 			const ctx = this.ctx
 			for (var x=1; x<this.canvas.width/this.blocksize-1; x++){
 				for (var y=1; y<this.canvas.height/this.blocksize-1; y++){
@@ -530,7 +585,6 @@ class Gamesetting{
 			ctx.fillStyle = "blue"
 			ctx.fillRect(this.half_width*this.blocksize,this.half_height*this.blocksize,this.blocksize,this.blocksize)
 			this.make_shadow()
-
 		}, 100);
 	}
 
@@ -544,16 +598,24 @@ class Gamesetting{
 
 	//input 받기
 	user_input(){
-		const onoff=document.getElementById("shadowOnOff")
-		onoff.addEventListener("mouseup",(e)=>{
-			console.log(onoff.value)
-			if(onoff.value === "on"){
-				onoff.value = "off"
-			}else if(onoff.value === "off"){
-				onoff.value = "on"
-			}
-		})
+//		const onoff=document.getElementById("shadowOnOff")
+//		onoff.addEventListener("mouseup",(e)=>{
+//			console.log(onoff.value)
+//			if(onoff.value === "on"){
+//				onoff.value = "off"
+//			}else if(onoff.value === "off"){
+//				onoff.value = "on"
+//			}
+//		})
+//
+	}
 
+	commandmode(judgment){
+		if(judgment==="on"){
+			this.CM="on"
+		}else if(judgment==="off"){
+			this.CM="off"
+		}
 	}
 }
 // 해야하는것
@@ -576,6 +638,18 @@ function main(){
 
 	gamesetting.user_input()
 }
+
 main()
+
+setInterval(() => {
+	if(document.getElementById("command").value==="psy05on"){
+		document.getElementById("command").value=""
+		gamesetting.commandmode("on")
+	}
+	if(document.getElementById("command").value==="psy05off"){
+		document.getElementById("command").value=""
+		gamesetting.commandmode("off")
+	}
+}, 100);
 
 
