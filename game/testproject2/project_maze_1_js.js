@@ -113,27 +113,21 @@ class Gamesetting{
 		//		this.place[i][li] = "gray"
 		//	}
 		//}
-	//	for(let i=0;i<this.map_size_width;i++){	//위쪽
-	//		this.place[i].fill("gray", 0, this.block_gray_height)
-	//	}
 		//this.place.filter((row, index) => (index>=0 && index < this.map_size_width)).fill("gray", 0, this.block_gray_height)
-		this.place.map((column, index) => index>=0 && index<this.map_size_width && column.fill("gray", 0, this.block_gray_height))
+
+		//this.place.map((column, index) => index>=0 && index<this.map_size_width && column.fill("gray", 0, this.block_gray_height))
+
+
+		for(let i=0;i<this.map_size_width;i++){	//위쪽
+			this.place[i].fill("gray", 0, this.block_gray_height)
+		}
 		for(let i=0;i<this.block_gray_width;i++){	//왼쪽
-			//for(let li=this.block_gray_height;li<this.map_size_height-this.block_gray_height + 1;li++){
-			//	this.place[i][li] = "gray"
-			//}
 			this.place[i].fill("gray", this.block_gray_height, this.height_margin)
 		}
 		for(let i=this.map_size_width-this.block_gray_width + 1; i<this.map_size_width; i++){  //오른쪽
-			//for(let li=this.block_gray_height;li<this.map_size_height-this.block_gray_height + 1;li++){
-			//	this.place[i][li] = "gray"
-			//}
 			this.place[i].fill("gray", this.block_gray_height, this.height_margin)
 		}
 		for(let i=0; i<this.map_size_width; i++){  //아레쪽
-			//for(let li=this.map_size_height-this.block_gray_height + 1;li<this.map_size_height;li++){
-			//	this.place[i][li] = "gray"
-			//}
 			this.place[i].fill("gray", this.height_margin, this.map_size_height)
 		}
 	}
@@ -642,11 +636,11 @@ function main(){
 main()
 
 setInterval(() => {
-	if(document.getElementById("command").value==="psy05on"){
+	if(document.getElementById("command").value==="1"){
 		document.getElementById("command").value=""
 		gamesetting.commandmode("on")
 	}
-	if(document.getElementById("command").value==="psy05off"){
+	if(document.getElementById("command").value==="0"){
 		document.getElementById("command").value=""
 		gamesetting.commandmode("off")
 	}
