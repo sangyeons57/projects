@@ -166,6 +166,12 @@ class Gamesetting{
 			this.make_shadow_off()
 		}
 
+
+		for(let i =Math.floor(this.canvas.width/this.blocksize/2)-2; i<=Math.floor(this.canvas.width/this.blocksize/2)+2; i++){
+			for(let li =Math.floor(this.canvas.height/this.blocksize/2)-2; li<=Math.floor(this.canvas.height/this.blocksize/2)+2; li++){
+				this.place_shadow[i][li]=0
+			}
+		}
 		const ctx = this.ctx
 		ctx.fillStyle = "black"
 		for(let i in this.place_shadow){			//찍기
@@ -346,6 +352,8 @@ class Gamesetting{
 				break
 			}
 		}
+
+
 	}
 
 
