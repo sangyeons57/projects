@@ -660,7 +660,7 @@ this.bulid_wall_tool(40,32,40,34)
 					this.screen_y += 1
 				}
 			} else {}
-		}, 100);
+		}, 230);
 
 		document.getElementById("html").addEventListener('touchend', (e)=>{
 			clientx_1 = 0
