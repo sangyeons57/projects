@@ -627,7 +627,7 @@ this.bulid_wall_tool(40,32,40,34)
 		})
 
 		let m_move=setInterval(() => {
-			if(Math.abs(clientx_1-clientx_2)<17){
+			if(Math.abs(clientx_1-clientx_2)<23){
 			} else if(clientx_1<clientx_2){
 				this.screen_x += 1
 				this.player_x += 1
@@ -644,7 +644,7 @@ this.bulid_wall_tool(40,32,40,34)
 				}
 			} else {}
 
-			if(Math.abs(clienty_1-clienty_2)<17){
+			if(Math.abs(clienty_1-clienty_2)<23){
 			} else if(clienty_1<clienty_2){
 				this.screen_y += 1
 				this.player_y += 1
