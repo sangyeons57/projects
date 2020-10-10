@@ -64,7 +64,7 @@ class Gamesetting{
 		this.block_gray_height =Math.floor(this.canvas.height / this.blocksize/ 2)	//회색부분 캔버스크기에따라 그거에 반만큼 
 
 		this.map_size_width=500 / this.blocksize
-		this.map_size_height=1000 / this.blocksize	//map 전체 사이즈 
+		this.map_size_height=500 / this.blocksize	//map 전체 사이즈 
 
 		this.height_margin = this.map_size_height - this.block_gray_height + 1
 		this.width_margin = this.map_size_width - this.block_gray_width + 1
@@ -354,8 +354,23 @@ class Gamesetting{
 	 * 벽그리는 도구 
 	 */
 	bulid_wall_tool(start_x,start_y,end_x,end_y){
-		for(let i = start_x+this.block_gray_width;i<end_x+this.block_gray_width;i++){
-			for(let li = start_y+this.block_gray_height; li<end_y+this.block_gray_height; li++){
+		for(let i = start_x;i<=end_x;i++){
+			for(let li = start_y; li<=end_y; li++){
+				this.place[i][li]="gray"
+			}
+		}
+		for(let i = start_x;i>=end_x;i--){
+			for(let li = start_y; li>=end_y; li--){
+				this.place[i][li]="gray"
+			}
+		}
+		for(let i = start_x;i>=end_x;i--){
+			for(let li = start_y; li<=end_y; li++){
+				this.place[i][li]="gray"
+			}
+		}
+		for(let i = start_x;i<=end_x;i++){
+			for(let li = start_y; li>=end_y; li--){
 				this.place[i][li]="gray"
 			}
 		}
@@ -363,13 +378,13 @@ class Gamesetting{
 
 
 	build_wall_tool_x(start_x,start_y,length){
-		for (let i = start_x+this.block_gray_width; i<start_x+length+this.block_gray_width; i++){
-			this.place[i][start_y+this.block_gray_height]="gray"
+		for (let i = start_x; i<start_x+length; i++){
+			this.place[i][start_y]="gray"
 		}
 	}
 	build_wall_tool_y(start_x,start_y,length){
-		for (let i = start_y+this.block_gray_height; i<start_y+length+this.block_gray_height; i++){
-			this.place[start_x+this.block_gray_width][i]="gray"
+		for (let i = start_y; i<start_y+length; i++){
+			this.place[start_x][i]="gray"
 		}
 
 	}
@@ -377,21 +392,179 @@ class Gamesetting{
 
 	//그리는놈
 	build_wall(){
-		this.build_wall_tool_y(1,0,3)
-		this.build_wall_tool_x(0,6,3)
-		this.build_wall_tool_x(1,3,3)
-		this.build_wall_tool_x(4,5,3)
-		this.build_wall_tool_y(2,5,3)
-		this.build_wall_tool_x(7,3,4)
-		this.build_wall_tool_y(7,9,4)
-		this.build_wall_tool_x(11,13,6)
-		this.build_wall_tool_y(9,10,2)
-		this.build_wall_tool_x(16,12,3)
-		this.build_wall_tool_y(4,8,4)
-		this.build_wall_tool_y(14,8,4)
-		this.build_wall_tool_y(10,5,4)
-		this.build_wall_tool_x(9,7,4)
-		this.build_wall_tool_x(0,15,13)
+		this.bulid_wall_tool(11,10,11,12)
+this.bulid_wall_tool(10,14,12,14)
+this.bulid_wall_tool(13,12,14,12)
+this.bulid_wall_tool(14,13,14,15)
+this.bulid_wall_tool(13,11,13,11)
+this.bulid_wall_tool(16,10,16,12)
+this.bulid_wall_tool(11,16,14,16)
+this.bulid_wall_tool(11,18,16,18)
+this.bulid_wall_tool(16,17,16,14)
+this.bulid_wall_tool(15,14,15,14)
+this.bulid_wall_tool(18,11,18,15)
+this.bulid_wall_tool(10,20,13,20)
+this.bulid_wall_tool(15,21,15,20)
+this.bulid_wall_tool(17,17,18,17)
+this.bulid_wall_tool(18,18,18,20)
+this.bulid_wall_tool(16,20,17,20)
+this.bulid_wall_tool(11,22,11,24)
+this.bulid_wall_tool(11,22,11,24)
+this.bulid_wall_tool(13,22,14,22)
+this.bulid_wall_tool(13,22,14,22)
+this.bulid_wall_tool(12,24,16,24)
+this.bulid_wall_tool(12,24,16,24)
+this.bulid_wall_tool(16,23,17,23)
+this.bulid_wall_tool(16,23,17,23)
+this.bulid_wall_tool(17,22,19,22)
+this.bulid_wall_tool(17,22,19,22)
+this.bulid_wall_tool(19,12,21,12)
+this.bulid_wall_tool(19,12,21,12)
+this.bulid_wall_tool(20,10,20,10)
+this.bulid_wall_tool(20,10,20,10)
+this.bulid_wall_tool(22,10,22,12)
+this.bulid_wall_tool(22,10,22,12)
+this.bulid_wall_tool(19,20,20,20)
+this.bulid_wall_tool(19,20,20,20)
+this.bulid_wall_tool(20,18,22,18)
+this.bulid_wall_tool(20,18,22,18)
+this.bulid_wall_tool(22,19,22,22)
+this.bulid_wall_tool(22,19,22,22)
+this.bulid_wall_tool(21,22,21,24)
+this.bulid_wall_tool(21,22,21,24)
+this.bulid_wall_tool(20,17,20,14)
+this.bulid_wall_tool(20,17,20,14)
+this.bulid_wall_tool(21,14,24,14)
+this.bulid_wall_tool(21,14,24,14)
+this.bulid_wall_tool(24,12,24,11)
+this.bulid_wall_tool(24,12,24,11)
+this.bulid_wall_tool(10,26,12,26)
+this.bulid_wall_tool(14,26,18,26)
+this.bulid_wall_tool(18,25,18,25)
+this.bulid_wall_tool(19,24,19,24)
+this.bulid_wall_tool(19,26,23,26)
+this.bulid_wall_tool(14,27,14,29)
+this.bulid_wall_tool(14,31,11,31)
+this.bulid_wall_tool(12,28,12,29)
+this.bulid_wall_tool(11,28,11,30)
+this.bulid_wall_tool(12,32,12,33)
+this.bulid_wall_tool(13,33,16,33)
+this.bulid_wall_tool(16,32,16,28)
+this.bulid_wall_tool(18,28,18,34)
+this.bulid_wall_tool(10,33,10,33)
+this.bulid_wall_tool(12,34,12,36)
+this.bulid_wall_tool(11,38,13,38)
+this.bulid_wall_tool(11,39,11,39)
+this.bulid_wall_tool(13,40,15,40)
+this.bulid_wall_tool(11,35,11,36)
+this.bulid_wall_tool(14,38,14,35)
+this.bulid_wall_tool(15,35,18,35)
+this.bulid_wall_tool(20,27,20,30)
+this.bulid_wall_tool(20,32,22,32)
+this.bulid_wall_tool(22,31,22,29)
+this.bulid_wall_tool(24,29,24,26)
+this.bulid_wall_tool(20,33,20,36)
+this.bulid_wall_tool(17,39,17,37)
+this.bulid_wall_tool(18,39,21,39)
+this.bulid_wall_tool(24,24,24,17)
+this.bulid_wall_tool(22,16,23,16)
+this.bulid_wall_tool(22,37,22,34)
+this.bulid_wall_tool(23,31,26,31)
+this.bulid_wall_tool(26,30,26,24)
+this.bulid_wall_tool(25,24,25,24)
+this.bulid_wall_tool(25,14,27,14)
+this.bulid_wall_tool(26,15,26,22)
+this.bulid_wall_tool(25,11,29,11)
+this.bulid_wall_tool(31,11,34,11)
+this.bulid_wall_tool(37,10,37,12)
+this.bulid_wall_tool(34,12,34,14)
+this.bulid_wall_tool(35,14,38,14)
+this.bulid_wall_tool(39,13,39,11)
+this.bulid_wall_tool(39,16,32,16)
+this.bulid_wall_tool(32,13,32,15)
+this.bulid_wall_tool(31,12,31,12)
+this.bulid_wall_tool(30,13,30,13)
+this.bulid_wall_tool(30,15,28,15)
+this.bulid_wall_tool(40,18,34,18)
+this.bulid_wall_tool(32,17,32,19)
+this.bulid_wall_tool(30,17,28,17)
+this.bulid_wall_tool(33,20,35,20)
+this.bulid_wall_tool(37,20,39,20)
+this.bulid_wall_tool(37,21,37,23)
+this.bulid_wall_tool(35,22,34,23)
+this.bulid_wall_tool(22,39,26,39)
+this.bulid_wall_tool(23,34,26,34)
+this.bulid_wall_tool(23,36,27,36)
+this.bulid_wall_tool(28,35,28,35)
+this.bulid_wall_tool(29,34,29,29)
+this.bulid_wall_tool(27,31,27,31)
+this.bulid_wall_tool(27,22,27,22)
+this.bulid_wall_tool(28,23,28,26)
+this.bulid_wall_tool(27,27,27,27)
+this.bulid_wall_tool(19,36,19,36)
+this.bulid_wall_tool(30,18,30,21)
+this.bulid_wall_tool(27,19,28,19)
+this.bulid_wall_tool(31,22,33,22)
+this.bulid_wall_tool(35,21,35,21)
+this.bulid_wall_tool(30,24,32,24)
+this.bulid_wall_tool(29,26,35,26)
+this.bulid_wall_tool(35,24,35,25)
+this.bulid_wall_tool(33,24,33,24)
+this.bulid_wall_tool(27,39,31,39)
+this.bulid_wall_tool(33,39,36,39)
+this.bulid_wall_tool(33,39,36,39)
+this.bulid_wall_tool(38,40,38,34)
+this.bulid_wall_tool(38,40,38,34)
+this.bulid_wall_tool(25,38,28,38)
+this.bulid_wall_tool(25,38,28,38)
+this.bulid_wall_tool(29,36,29,36)
+this.bulid_wall_tool(29,36,29,36)
+this.bulid_wall_tool(30,37,30,37)
+this.bulid_wall_tool(30,37,30,37)
+this.bulid_wall_tool(31,38,31,38)
+this.bulid_wall_tool(31,38,31,38)
+this.bulid_wall_tool(33,38,33,37)
+this.bulid_wall_tool(33,38,33,37)
+this.bulid_wall_tool(32,36,32,35)
+this.bulid_wall_tool(32,36,32,35)
+this.bulid_wall_tool(31,35,31,33)
+this.bulid_wall_tool(31,35,31,33)
+this.bulid_wall_tool(30,31,34,31)
+this.bulid_wall_tool(30,31,34,31)
+this.bulid_wall_tool(33,33,33,33)
+this.bulid_wall_tool(33,33,33,33)
+this.bulid_wall_tool(34,34,34,34)
+this.bulid_wall_tool(34,34,34,34)
+this.bulid_wall_tool(35,35,35,37)
+this.bulid_wall_tool(35,35,35,37)
+this.bulid_wall_tool(36,38,36,38)
+this.bulid_wall_tool(36,38,36,38)
+this.bulid_wall_tool(37,35,37,35)
+this.bulid_wall_tool(37,35,37,35)
+this.bulid_wall_tool(35,34,35,34)
+this.bulid_wall_tool(35,34,35,34)
+this.bulid_wall_tool(36,33,36,33)
+this.bulid_wall_tool(36,33,36,33)
+this.bulid_wall_tool(31,29,36,29)
+this.bulid_wall_tool(31,29,36,29)
+this.bulid_wall_tool(36,30,36,32)
+this.bulid_wall_tool(36,30,36,32)
+this.bulid_wall_tool(30,28,30,28)
+this.bulid_wall_tool(30,28,30,28)
+this.bulid_wall_tool(38,33,38,30)
+this.bulid_wall_tool(38,33,38,30)
+this.bulid_wall_tool(39,29,39,29)
+this.bulid_wall_tool(39,29,39,29)
+this.bulid_wall_tool(36,28,38,28)
+this.bulid_wall_tool(36,28,38,28)
+this.bulid_wall_tool(40,23,40,23)
+this.bulid_wall_tool(40,23,40,23)
+this.bulid_wall_tool(39,24,39,24)
+this.bulid_wall_tool(34,27,34,28)
+this.bulid_wall_tool(37,24,37,26)
+this.bulid_wall_tool(38,26,39,26)
+this.bulid_wall_tool(40,27,40,27)
+this.bulid_wall_tool(40,32,40,34)
 	}
 
 	//컴퓨터용 조작
@@ -604,12 +777,106 @@ class Gamesetting{
 //
 	}
 
+	usermode(){
+		const um=document.getElementById("usermode")
+		console.log(1)
+		setInterval(() => {
+			um.innerText=`${this.player_x},${this.player_y}`
+		}, 100);
+	}
+
 	commandmode(judgment){
 		if(judgment==="on"){
 			this.CM="on"
+			this.commandmode_maker()
+			this.commandmode_changer()
 		}else if(judgment==="off"){
 			this.CM="off"
+			this.usermode()
+			this.usermode_changer()
 		}
+	}
+	usermode_changer(){
+		for(let i=this.block_gray_width; i<=this.place.length-this.block_gray_width; i++){
+			for(let li = this.block_gray_height; li<=this.place[0].length-this.block_gray_height; li++){
+				if(this.place[i][li]==="Gray"){
+					this.place[i][li]="gray"
+				}
+			}
+		}
+	}
+
+	commandmode_changer(){
+		for(let i=this.block_gray_width; i<=this.place.length-this.block_gray_width; i++){
+			for(let li = this.block_gray_height; li<=this.place[0].length-this.block_gray_height; li++){
+				if(this.place[i][li]==="gray"){
+					this.place[i][li]="Gray"
+				}
+			}
+		}
+
+	}
+
+	commandmode_maker(){
+		const cws=document.getElementById("command_wallmaker_supporter")
+		const cws1=document.getElementById("command_wallmaker_supporter_1")
+		let storage=[]
+		let s_storage=[]
+		let step = 0
+		document.addEventListener('keydown',(e)=>{
+			if(e.code==="Space"){
+				if(step === 0){
+					storage.push(this.player_x,this.player_y)
+					cws.innerText=`(${this.player_x},${this.player_y})`
+					step=1
+				} else if(step === 1){
+					storage.push(this.player_x,this.player_y)
+
+					s_storage=storage
+					s_storage.push(cws1)
+
+					cws.innerText+=`(${this.player_x},${this.player_y})`
+					cws1.innerText+=`this.bulid_wall_tool(${storage[0]},${storage[1]},${storage[2]},${storage[3]})\n`
+
+					for(let i = storage[0];i<=storage[2];i++){
+						for(let li = storage[1]; li<=storage[3]; li++){
+							this.place[i][li]="#FF0000"
+						}
+					}
+
+					for(let i = storage[2];i>=storage[0];i--){
+						for(let li = storage[3]; li>=storage[1]; li--){
+							this.place[i][li]="#FF0000"
+						}
+					}
+					for(let i = storage[2];i>=storage[0];i--){
+						for(let li = storage[3]; li<=storage[1]; li++){
+							this.place[i][li]="#FF0000"
+						}
+					}
+					for(let i = storage[2];i<=storage[0];i++){
+						for(let li = storage[3]; li>=storage[1]; li--){
+							this.place[i][li]="#FF0000"
+						}
+					}
+
+					storage=[]
+					step=0
+				}
+			}
+		})
+	}
+	gameend(){
+		this.place[40][40] = "yellow"
+		this.place[39][40]= "yellow"
+		setInterval(() => {
+			if(this.player_x===39||this.player_x===40){
+				if(this.player_y===40){
+					document.getElementById("command_wallmaker_supporter").innerText="FINISH"
+					this.CM="on"
+				}
+			}
+		}, 1000);
 	}
 }
 // 해야하는것
@@ -624,6 +891,8 @@ function main(){
 	gamesetting.bulid_map()
 	gamesetting.make_shadow_map()
 
+	gamesetting.gameend()
+
 	gamesetting.m_move_direction()
 	gamesetting.move_direction()
 
@@ -635,6 +904,7 @@ function main(){
 
 main()
 
+gamesetting.commandmode("off")
 setInterval(() => {
 	if(document.getElementById("command").value==="1"){
 		document.getElementById("command").value=""
