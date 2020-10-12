@@ -627,7 +627,7 @@ this.bulid_wall_tool(40,32,40,34)
 		})
 
 		let m_move=setInterval(() => {
-			if(Math.abs(clientx_1-clientx_2)<23){
+			if(Math.abs(clientx_1-clientx_2)<27){
 			} else if(clientx_1<clientx_2){
 				this.screen_x += 1
 				this.player_x += 1
@@ -644,7 +644,7 @@ this.bulid_wall_tool(40,32,40,34)
 				}
 			} else {}
 
-			if(Math.abs(clienty_1-clienty_2)<23){
+			if(Math.abs(clienty_1-clienty_2)<27){
 			} else if(clienty_1<clienty_2){
 				this.screen_y += 1
 				this.player_y += 1
@@ -874,6 +874,8 @@ this.bulid_wall_tool(40,32,40,34)
 			}
 		})
 	}
+
+	//게임 끝나는것 세팅
 	gameend(){
 		this.place[40][40] = "yellow"
 		this.place[39][40]= "yellow"
@@ -884,6 +886,39 @@ this.bulid_wall_tool(40,32,40,34)
 					this.CM="on"
 				}
 			}
+		}, 1000);
+	}
+
+	//타이머 만들기
+	time_counter(){
+		let judgment=0
+		const timer_on=setInterval(() => {
+			document.addEventListener("keydown",(event)=>{
+				judgment=1
+				clearInterval(timer_on)
+			})
+		}, 1000);
+		const timer_on_m=setInterval(() => {
+			document.getElementById("html").addEventListener('touchstart',(e)=>{
+				judgment=1
+				clearInterval(timer_on)
+			})
+		}, 1000); 
+
+		let min=0
+		let sec=0
+
+		const timer=document.getElementById("timer")
+
+		setInterval(() => {
+			if(judgment===1){
+				sec+=1
+				if(sec>60){
+					sec=0
+					min+=1
+				}
+			}
+			timer.innerText=`${min<10 ? "0"+min : min} : ${sec<10 ? "0"+sec : sec}`
 		}, 1000);
 	}
 }
@@ -908,6 +943,7 @@ function main(){
 	gamesetting.enter()
 
 	gamesetting.user_input()
+	gamesetting.time_counter()
 }
 
 main()
