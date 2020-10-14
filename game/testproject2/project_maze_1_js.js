@@ -1,4 +1,4 @@
-class Map {
+class TileType {
 	constructor() {
 		this.wall = 1
 		this.noWall = 0
@@ -6,53 +6,22 @@ class Map {
 	}
 }
 
-const M = new Map()
+const tile = new TileType()
 
 class Gamesetting{
-
-	canvas
-	ctx
-
-	place
-
-	place_wall
-	place_shadow
-
-	blocksize
-
-	screen_x 
-	screen_y
-
-
-
-	player_x
-	player_y
-
-	block_gray_width 
-	block_gray_height
-
-	map_size_width
-	map_size_height
-
-	half_width
-	half_height
-
-	
-	CM
 	constructor(){
-
 		this.canvas = document.getElementById("canvas");
 		this.ctx = this.canvas.getContext("2d");
+		this.canvas.width = 210
+		this.canvas.height = 210
 
+		//  지도 배열
 		this.place = [];
-
 		this.place_wall=[];
 		this.place_shadow=[];
 
 		this.screen_x = 0
 		this.screen_y = 0
-
-
 
 		this.player_x = 10
 		this.player_y = 10
@@ -63,34 +32,64 @@ class Gamesetting{
 		this.block_gray_width = Math.floor(this.canvas.width / this.blocksize / 2)
 		this.block_gray_height =Math.floor(this.canvas.height / this.blocksize/ 2)	//회색부분 캔버스크기에따라 그거에 반만큼 
 
-		this.map_size_width=500 / this.blocksize
-		this.map_size_height=500 / this.blocksize	//map 전체 사이즈 
+//		this.map_size_width=500 / this.blocksize
+//		this.map_size_height=500 / this.blocksize	//map 전체 사이즈 
 
-		this.height_margin = this.map_size_height - this.block_gray_height + 1
-		this.width_margin = this.map_size_width - this.block_gray_width + 1
+//		this.height_margin = this.map_size_height - this.block_gray_height + 1
+//		this.width_margin = this.map_size_width - this.block_gray_width + 1
 
 		this.half_width = Math.floor(this.canvas.width/this.blocksize/2)
 		this.half_height = Math.floor(this.canvas.height/this.blocksize/2)
 
+		this.end = "false"
 
 		this.CM="off"
+
+
+		this.level = 0
 	}
 
-	makemap(){		//맵만들기
-		for(let i = 0; i <this.map_size_width; i++){
-			let place_line = []
-			for(let li = 0; li<this.map_size_height; li++){
-				if(li%2===0){
-					place_line.push("#04B404")
-				} else {
-					place_line.push("#088A08")
 
+	start(){
+		this.level+=1
+
+
+		if(this.level===1){
+			this.makemap(10,10)
+		} else if(this.level===2){
+			this.makemap(10,15)
+		}else{
+		}
+	}
+
+	makemap(width,height){		//맵만들기
+//		for(let i = 0; i <this.map_size_width; i++){
+//			let place_line = []
+//			for(let li = 0; li<this.map_size_height; li++){
+//				if(li%2===0){
+//					place_line.push("#04B404")
+//				} else {
+//					place_line.push("#088A08")
+//
+//				}
+//			}
+//			this.place.push(place_line)
+//
+//		}
+		width=width+(this.block_gray_width*2)
+		height=height+(this.block_gray_height*2)
+		for(let i=0; i<width;i++){
+			let place_line=[]
+			for(let li=0; li<height;li++){
+				if(i%2===0){
+					place_line.push("#04B404")
+				}else{
+					place_line.push("#088A08")
 				}
 			}
 			this.place.push(place_line)
-
 		}
-
+		this.bulid_map(width,height)
 		for(let i = 1; i<this.canvas.width/this.blocksize; i++){
 			let place_line =[]
 			for(let li = 1; li<this.canvas.height/this.blocksize; li++){
@@ -98,7 +97,6 @@ class Gamesetting{
 			}
 			this.place_wall.push(place_line)
 		}
-
 	// list 형태 list[x][y]
 	//		0	1	2
 	//	  0 l	l	l
@@ -107,28 +105,25 @@ class Gamesetting{
 	//	  3 t	t	t
 	}
 
-	bulid_map(){
+	bulid_map(width,height){
 		//for(let i=0;i<this.map_size_width;i++){	//위쪽
 		//	for(let li=0;li<this.block_gray_height;li++){
 		//		this.place[i][li] = "gray"
 		//	}
 		//}
 		//this.place.filter((row, index) => (index>=0 && index < this.map_size_width)).fill("gray", 0, this.block_gray_height)
-
 		//this.place.map((column, index) => index>=0 && index<this.map_size_width && column.fill("gray", 0, this.block_gray_height))
-
-
-		for(let i=0;i<this.map_size_width;i++){	//위쪽
-			this.place[i].fill("gray", 0, this.block_gray_height)
+		for(let i=0;i<this.block_gray_height;i++){	//위쪽
+			this.place[i].fill("gray", 0, width)
 		}
-		for(let i=0;i<this.block_gray_width;i++){	//왼쪽
-			this.place[i].fill("gray", this.block_gray_height, this.height_margin)
+		for(let i=this.block_gray_height;i<height-this.block_gray_height+1;i++){	//왼쪽
+			this.place[i].fill("gray", 0, this.block_gray_width)
 		}
-		for(let i=this.map_size_width-this.block_gray_width + 1; i<this.map_size_width; i++){  //오른쪽
-			this.place[i].fill("gray", this.block_gray_height, this.height_margin)
+		for(let i=this.block_gray_height; i<width-this.block_gray_height; i++){  //오른쪽
+			this.place[i].fill("gray", width-this.block_gray_height, height)
 		}
-		for(let i=0; i<this.map_size_width; i++){  //아레쪽
-			this.place[i].fill("gray", this.height_margin, this.map_size_height)
+		for(let i=height-this.block_gray_height; i<height; i++){  //아레쪽
+			this.place[i].fill("gray", 0,width)
 		}
 	}
 
@@ -138,7 +133,7 @@ class Gamesetting{
 		for(let i = 1; i<this.canvas.width/this.blocksize; i++){
 			let place_line =[]
 			for(let li = 1; li<this.canvas.height/this.blocksize; li++){
-				place_line.push(M.shadow)
+				place_line.push(tile.shadow)
 			}
 			this.place_shadow.push(place_line)
 		}
@@ -149,7 +144,7 @@ class Gamesetting{
 	make_wall_map(){
 		for(var i in this.place_wall){
 			for(var li in this.place_wall[i]){
-				if(this.place[this.screen_x+Number(i)][this.screen_y+Number(li)]==="gray"){
+				if(this.place[this.screen_y+Number(li)][this.screen_x+Number(i)]==="gray"){
 					this.place_wall[i][li] = 1
 				}else{
 					this.place_wall[i][li] = 0
@@ -166,9 +161,12 @@ class Gamesetting{
 			this.make_shadow_off()
 		}
 
-
-		for(let i =Math.floor(this.canvas.width/this.blocksize/2)-2; i<=Math.floor(this.canvas.width/this.blocksize/2)+2; i++){
-			for(let li =Math.floor(this.canvas.height/this.blocksize/2)-2; li<=Math.floor(this.canvas.height/this.blocksize/2)+2; li++){
+		let see =0
+		if(this.level===1){
+			see=1
+		}
+		for(let i =Math.floor(this.canvas.width/this.blocksize/2)-see; i<=Math.floor(this.canvas.width/this.blocksize/2)+see; i++){
+			for(let li =Math.floor(this.canvas.height/this.blocksize/2)-see; li<=Math.floor(this.canvas.height/this.blocksize/2)+see; li++){
 				this.place_shadow[i][li]=0
 			}
 		}
@@ -177,13 +175,12 @@ class Gamesetting{
 		for(let i in this.place_shadow){			//찍기
 			for(let li in this.place_shadow[i]){
 				//if(this.place_wall[i][li]===7){
-				if(this.place_shadow[Number(i)][Number(li)]===7){
+				if(this.place_shadow[Number(li)][Number(i)]===7){
 					ctx.fillStyle = "black"
-					ctx.fillRect(Number(i)*this.blocksize,Number(li)*this.blocksize,this.blocksize,this.blocksize)
+					ctx.fillRect(Number(li)*this.blocksize,Number(i)*this.blocksize,this.blocksize,this.blocksize)
 				}
 			}
 		}
-
 	}
 
 	//off 일때 0으로 바꾸기
@@ -203,29 +200,29 @@ class Gamesetting{
 	make_shadow_on(){
 		this.make_wall_map()
 
-		this.place_shadow.map((column)=> column.fill(M.shadow,0,column.length))
+		this.place_shadow.map((column)=> column.fill(tile.shadow,0,column.length))
 
+
+		//오른쪽 
 		let x = this.half_width;
 		let y = this.half_height;
-		this.place_shadow[x][y]=0
 
 		let up = 0
 		let down = this.place_shadow[1].length
 
-		//오른쪽 
 		while (true) {
 
 			for(let i =this.half_height; i<down; i++){
-				this.place_shadow[x][i]= M.noWall
-				if (1===this.place_wall[x][i]){
+				this.place_shadow[i][x]= tile.noWall
+				if (1===this.place_wall[i][x]){
 					down = i+1
 					break
 				}
 			}
 
 			for(let i =this.half_height; i>up; i--){
-				this.place_shadow[x][i]= M.noWall
-				if (1===this.place_wall[x][i]){
+				this.place_shadow[i][x]= tile.noWall
+				if (1===this.place_wall[i][x]){
 					up = i-1
 					break
 				}
@@ -233,13 +230,13 @@ class Gamesetting{
 
 			x+=1
 			if(x<this.canvas.width/this.blocksize-1){
-				this.place_shadow[x][y] = M.noWall
+				this.place_shadow[y][x] = tile.noWall
 			} else{
 				break
 			}
 
 
-			if(1 === this.place_wall[x][y]){
+			if(1 === this.place_wall[y][x]){
 				break
 			}
 
@@ -254,15 +251,15 @@ class Gamesetting{
 		while(true){
 
 			for(let i =this.half_height; i>up; i--){
-				this.place_shadow[x][i]= M.noWall
-				if (1===this.place_wall[x][i]){
+				this.place_shadow[i][x]= tile.noWall
+				if (1===this.place_wall[i][x]){
 					up = i-1
 					break
 				}
 			}
 			for(let i =this.half_height; i<down; i++){
-				this.place_shadow[x][i]= M.noWall
-				if (1===this.place_wall[x][i]){
+				this.place_shadow[i][x]= tile.noWall
+				if (1===this.place_wall[i][x]){
 					down = i+1
 					break
 				}
@@ -270,13 +267,13 @@ class Gamesetting{
 
 			x-=1
 			if(x>0){
-				this.place_shadow[x][y] = M.noWall
+				this.place_shadow[y][x] = tile.noWall
 			} else{
 				break
 			}
 
 
-			if(1 === this.place_wall[x][y]){
+			if(1 === this.place_wall[y][x]){
 				break
 			}
 		}
@@ -289,16 +286,16 @@ class Gamesetting{
 		while(true){
 
 			for(let i = this.half_width; i>left; i--){
-				this.place_shadow[i][y]=M.noWall
-				if (1===this.place_wall[i][y]){
+				this.place_shadow[y][i]=tile.noWall
+				if (1===this.place_wall[y][i]){
 					left = i-1
 					break
 				}
 			}
 
 			for(let i = this.half_width; i<right; i++){
-				this.place_shadow[i][y]=M.noWall
-				if (1===this.place_wall[i][y]){
+				this.place_shadow[y][i]=tile.noWall
+				if (1===this.place_wall[y][i]){
 					right = i+1
 					break
 				}
@@ -307,12 +304,12 @@ class Gamesetting{
 
 			y-=1
 			if(y>0){
-				this.place_shadow[x][y] = M.noWall
+				this.place_shadow[y][x] = tile.noWall
 			} else {
 				break
 			}
 
-			if(1 === this.place_wall[x][y]){
+			if(1 === this.place_wall[y][x]){
 				break
 			}
 		}
@@ -325,16 +322,16 @@ class Gamesetting{
 		while(true){
 
 			for(let i = this.half_width; i>left; i--){
-				this.place_shadow[i][y]=M.wall
-				if (1===this.place_wall[i][y]){
+				this.place_shadow[y][i]=tile.wall
+				if (1===this.place_wall[y][i]){
 					left = i-1
 					break
 				}
 			}
 
 			for(let i = this.half_width; i<right; i++){
-				this.place_shadow[i][y]=M.wall
-				if (1===this.place_wall[i][y]){
+				this.place_shadow[y][i]=tile.wall
+				if (1===this.place_wall[y][i]){
 					right = i+1
 					break
 				}
@@ -343,12 +340,12 @@ class Gamesetting{
 
 			y+=1
 			if(y<this.canvas.height/this.blocksize-1){
-				this.place_shadow[x][y] = M.wall
+				this.place_shadow[y][x] = tile.wall
 			} else {
 				break
 			}
 
-			if(1 === this.place_wall[x][y]){
+			if(1 === this.place_wall[y][x]){
 				break
 			}
 		}
@@ -358,223 +355,302 @@ class Gamesetting{
 
 
 
-	/**
-	 * 벽그리는 도구 
-	 */
-	bulid_wall_tool(start_x,start_y,end_x,end_y){
-		for(let i = start_x;i<=end_x;i++){
-			for(let li = start_y; li<=end_y; li++){
-				this.place[i][li]="gray"
-			}
+
+	map_function(){
+		// map_list[y][x]형식
+		let map_list={
+			
+			1:
+		   //1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0
+		[
+			[0,1,0,0,0,0,0,0,0,0],//1
+			[0,1,0,1,1,0,1,0,1,0],//2
+			[0,0,0,1,0,0,1,0,1,0],//3
+			[1,1,0,1,0,1,0,0,1,0],//4
+			[0,0,0,1,0,0,1,0,1,0],//5
+			[0,1,1,0,1,1,0,1,0,0],//6
+			[0,0,0,0,1,0,1,0,1,1],//7
+			[0,1,1,1,0,0,0,0,0,0],//8
+			[0,1,0,0,0,1,0,1,1,0],//9
+			[0,0,0,1,0,1,0,0,1,0]//10
+
+		]
+			,
+			2:
+		[
+			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+		]
+
+		   ,
+
+		   10:
+		[
+			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//1
+			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//2
+			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//3
+			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//4
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//5
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//6
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//7
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//8
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//9
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//10
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//11
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//12
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//13
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//14
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//15
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//16
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//17
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//18
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//19
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//20
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//21
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//22
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//23
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//24
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//25
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//26
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//27
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//28
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//29
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//30
+		]
 		}
-		for(let i = start_x;i>=end_x;i--){
-			for(let li = start_y; li>=end_y; li--){
-				this.place[i][li]="gray"
+
+
+		setInterval(() => {
+			
+			if(this.level===1){
+				for(let i in map_list[1]){
+					for(let li in map_list[1][0]){
+						if(map_list[1][Number(li)][Number(i)]===1){
+							this.place[this.block_gray_height+Number(li)][this.block_gray_width+Number(i)] = "gray"
+						}
+					}
+				}
 			}
-		}
-		for(let i = start_x;i>=end_x;i--){
-			for(let li = start_y; li<=end_y; li++){
-				this.place[i][li]="gray"
-			}
-		}
-		for(let i = start_x;i<=end_x;i++){
-			for(let li = start_y; li>=end_y; li--){
-				this.place[i][li]="gray"
-			}
-		}
+
+
+		}, 100);
 	}
 
 
-	build_wall_tool_x(start_x,start_y,length){
-		for (let i = start_x; i<start_x+length; i++){
-			this.place[i][start_y]="gray"
-		}
-	}
-	build_wall_tool_y(start_x,start_y,length){
-		for (let i = start_y; i<start_y+length; i++){
-			this.place[start_x][i]="gray"
-		}
 
-	}
-	//----여기까지---
 
-	//그리는놈
-	build_wall(){
-		this.bulid_wall_tool(11,10,11,12)
-this.bulid_wall_tool(10,14,12,14)
-this.bulid_wall_tool(13,12,14,12)
-this.bulid_wall_tool(14,13,14,15)
-this.bulid_wall_tool(13,11,13,11)
-this.bulid_wall_tool(16,10,16,12)
-this.bulid_wall_tool(11,16,14,16)
-this.bulid_wall_tool(11,18,16,18)
-this.bulid_wall_tool(16,17,16,14)
-this.bulid_wall_tool(15,14,15,14)
-this.bulid_wall_tool(18,11,18,15)
-this.bulid_wall_tool(10,20,13,20)
-this.bulid_wall_tool(15,21,15,20)
-this.bulid_wall_tool(17,17,18,17)
-this.bulid_wall_tool(18,18,18,20)
-this.bulid_wall_tool(16,20,17,20)
-this.bulid_wall_tool(11,22,11,24)
-this.bulid_wall_tool(11,22,11,24)
-this.bulid_wall_tool(13,22,14,22)
-this.bulid_wall_tool(13,22,14,22)
-this.bulid_wall_tool(12,24,16,24)
-this.bulid_wall_tool(12,24,16,24)
-this.bulid_wall_tool(16,23,17,23)
-this.bulid_wall_tool(16,23,17,23)
-this.bulid_wall_tool(17,22,19,22)
-this.bulid_wall_tool(17,22,19,22)
-this.bulid_wall_tool(19,12,21,12)
-this.bulid_wall_tool(19,12,21,12)
-this.bulid_wall_tool(20,10,20,10)
-this.bulid_wall_tool(20,10,20,10)
-this.bulid_wall_tool(22,10,22,12)
-this.bulid_wall_tool(22,10,22,12)
-this.bulid_wall_tool(19,20,20,20)
-this.bulid_wall_tool(19,20,20,20)
-this.bulid_wall_tool(20,18,22,18)
-this.bulid_wall_tool(20,18,22,18)
-this.bulid_wall_tool(22,19,22,22)
-this.bulid_wall_tool(22,19,22,22)
-this.bulid_wall_tool(21,22,21,24)
-this.bulid_wall_tool(21,22,21,24)
-this.bulid_wall_tool(20,17,20,14)
-this.bulid_wall_tool(20,17,20,14)
-this.bulid_wall_tool(21,14,24,14)
-this.bulid_wall_tool(21,14,24,14)
-this.bulid_wall_tool(24,12,24,11)
-this.bulid_wall_tool(24,12,24,11)
-this.bulid_wall_tool(10,26,12,26)
-this.bulid_wall_tool(14,26,18,26)
-this.bulid_wall_tool(18,25,18,25)
-this.bulid_wall_tool(19,24,19,24)
-this.bulid_wall_tool(19,26,23,26)
-this.bulid_wall_tool(14,27,14,29)
-this.bulid_wall_tool(14,31,11,31)
-this.bulid_wall_tool(12,28,12,29)
-this.bulid_wall_tool(11,28,11,30)
-this.bulid_wall_tool(12,32,12,33)
-this.bulid_wall_tool(13,33,16,33)
-this.bulid_wall_tool(16,32,16,28)
-this.bulid_wall_tool(18,28,18,34)
-this.bulid_wall_tool(10,33,10,33)
-this.bulid_wall_tool(12,34,12,36)
-this.bulid_wall_tool(11,38,13,38)
-this.bulid_wall_tool(11,39,11,39)
-this.bulid_wall_tool(13,40,15,40)
-this.bulid_wall_tool(11,35,11,36)
-this.bulid_wall_tool(14,38,14,35)
-this.bulid_wall_tool(15,35,18,35)
-this.bulid_wall_tool(20,27,20,30)
-this.bulid_wall_tool(20,32,22,32)
-this.bulid_wall_tool(22,31,22,29)
-this.bulid_wall_tool(24,29,24,26)
-this.bulid_wall_tool(20,33,20,36)
-this.bulid_wall_tool(17,39,17,37)
-this.bulid_wall_tool(18,39,21,39)
-this.bulid_wall_tool(24,24,24,17)
-this.bulid_wall_tool(22,16,23,16)
-this.bulid_wall_tool(22,37,22,34)
-this.bulid_wall_tool(23,31,26,31)
-this.bulid_wall_tool(26,30,26,24)
-this.bulid_wall_tool(25,24,25,24)
-this.bulid_wall_tool(25,14,27,14)
-this.bulid_wall_tool(26,15,26,22)
-this.bulid_wall_tool(25,11,29,11)
-this.bulid_wall_tool(31,11,34,11)
-this.bulid_wall_tool(37,10,37,12)
-this.bulid_wall_tool(34,12,34,14)
-this.bulid_wall_tool(35,14,38,14)
-this.bulid_wall_tool(39,13,39,11)
-this.bulid_wall_tool(39,16,32,16)
-this.bulid_wall_tool(32,13,32,15)
-this.bulid_wall_tool(31,12,31,12)
-this.bulid_wall_tool(30,13,30,13)
-this.bulid_wall_tool(30,15,28,15)
-this.bulid_wall_tool(40,18,34,18)
-this.bulid_wall_tool(32,17,32,19)
-this.bulid_wall_tool(30,17,28,17)
-this.bulid_wall_tool(33,20,35,20)
-this.bulid_wall_tool(37,20,39,20)
-this.bulid_wall_tool(37,21,37,23)
-this.bulid_wall_tool(35,22,34,23)
-this.bulid_wall_tool(22,39,26,39)
-this.bulid_wall_tool(23,34,26,34)
-this.bulid_wall_tool(23,36,27,36)
-this.bulid_wall_tool(28,35,28,35)
-this.bulid_wall_tool(29,34,29,29)
-this.bulid_wall_tool(27,31,27,31)
-this.bulid_wall_tool(27,22,27,22)
-this.bulid_wall_tool(28,23,28,26)
-this.bulid_wall_tool(27,27,27,27)
-this.bulid_wall_tool(19,36,19,36)
-this.bulid_wall_tool(30,18,30,21)
-this.bulid_wall_tool(27,19,28,19)
-this.bulid_wall_tool(31,22,33,22)
-this.bulid_wall_tool(35,21,35,21)
-this.bulid_wall_tool(30,24,32,24)
-this.bulid_wall_tool(29,26,35,26)
-this.bulid_wall_tool(35,24,35,25)
-this.bulid_wall_tool(33,24,33,24)
-this.bulid_wall_tool(27,39,31,39)
-this.bulid_wall_tool(33,39,36,39)
-this.bulid_wall_tool(33,39,36,39)
-this.bulid_wall_tool(38,40,38,34)
-this.bulid_wall_tool(38,40,38,34)
-this.bulid_wall_tool(25,38,28,38)
-this.bulid_wall_tool(25,38,28,38)
-this.bulid_wall_tool(29,36,29,36)
-this.bulid_wall_tool(29,36,29,36)
-this.bulid_wall_tool(30,37,30,37)
-this.bulid_wall_tool(30,37,30,37)
-this.bulid_wall_tool(31,38,31,38)
-this.bulid_wall_tool(31,38,31,38)
-this.bulid_wall_tool(33,38,33,37)
-this.bulid_wall_tool(33,38,33,37)
-this.bulid_wall_tool(32,36,32,35)
-this.bulid_wall_tool(32,36,32,35)
-this.bulid_wall_tool(31,35,31,33)
-this.bulid_wall_tool(31,35,31,33)
-this.bulid_wall_tool(30,31,34,31)
-this.bulid_wall_tool(30,31,34,31)
-this.bulid_wall_tool(33,33,33,33)
-this.bulid_wall_tool(33,33,33,33)
-this.bulid_wall_tool(34,34,34,34)
-this.bulid_wall_tool(34,34,34,34)
-this.bulid_wall_tool(35,35,35,37)
-this.bulid_wall_tool(35,35,35,37)
-this.bulid_wall_tool(36,38,36,38)
-this.bulid_wall_tool(36,38,36,38)
-this.bulid_wall_tool(37,35,37,35)
-this.bulid_wall_tool(37,35,37,35)
-this.bulid_wall_tool(35,34,35,34)
-this.bulid_wall_tool(35,34,35,34)
-this.bulid_wall_tool(36,33,36,33)
-this.bulid_wall_tool(36,33,36,33)
-this.bulid_wall_tool(31,29,36,29)
-this.bulid_wall_tool(31,29,36,29)
-this.bulid_wall_tool(36,30,36,32)
-this.bulid_wall_tool(36,30,36,32)
-this.bulid_wall_tool(30,28,30,28)
-this.bulid_wall_tool(30,28,30,28)
-this.bulid_wall_tool(38,33,38,30)
-this.bulid_wall_tool(38,33,38,30)
-this.bulid_wall_tool(39,29,39,29)
-this.bulid_wall_tool(39,29,39,29)
-this.bulid_wall_tool(36,28,38,28)
-this.bulid_wall_tool(36,28,38,28)
-this.bulid_wall_tool(40,23,40,23)
-this.bulid_wall_tool(40,23,40,23)
-this.bulid_wall_tool(39,24,39,24)
-this.bulid_wall_tool(34,27,34,28)
-this.bulid_wall_tool(37,24,37,26)
-this.bulid_wall_tool(38,26,39,26)
-this.bulid_wall_tool(40,27,40,27)
-this.bulid_wall_tool(40,32,40,34)
-	}
-
+//	/**
+//	 * 벽그리는 도구 
+//	 */
+//	bulid_wall_tool(start_x,start_y,end_x,end_y){
+//		for(let i = start_x;i<=end_x;i++){
+//			for(let li = start_y; li<=end_y; li++){
+//				this.place[i][li]="gray"
+//			}
+//		}
+//		for(let i = start_x;i>=end_x;i--){
+//			for(let li = start_y; li>=end_y; li--){
+//				this.place[i][li]="gray"
+//			}
+//		}
+//		for(let i = start_x;i>=end_x;i--){
+//			for(let li = start_y; li<=end_y; li++){
+//				this.place[i][li]="gray"
+//			}
+//		}
+//		for(let i = start_x;i<=end_x;i++){
+//			for(let li = start_y; li>=end_y; li--){
+//				this.place[i][li]="gray"
+//			}
+//		}
+//	}
+//
+//
+//	build_wall_tool_x(start_x,start_y,length){
+//		for (let i = start_x; i<start_x+length; i++){
+//			this.place[i][start_y]="gray"
+//		}
+//	}
+//	build_wall_tool_y(start_x,start_y,length){
+//		for (let i = start_y; i<start_y+length; i++){
+//			this.place[start_x][i]="gray"
+//		}
+//
+//	}
+//	//----여기까지---
+//
+//	//그리는놈
+//	build_wall(){
+//		this.bulid_wall_tool(11,10,11,12)
+//this.bulid_wall_tool(10,14,12,14)
+//this.bulid_wall_tool(13,12,14,12)
+//this.bulid_wall_tool(14,13,14,15)
+//this.bulid_wall_tool(13,11,13,11)
+//this.bulid_wall_tool(16,10,16,12)
+//this.bulid_wall_tool(11,16,14,16)
+//this.bulid_wall_tool(11,18,16,18)
+//this.bulid_wall_tool(16,17,16,14)
+//this.bulid_wall_tool(15,14,15,14)
+//this.bulid_wall_tool(18,11,18,15)
+//this.bulid_wall_tool(10,20,13,20)
+//this.bulid_wall_tool(15,21,15,20)
+//this.bulid_wall_tool(17,17,18,17)
+//this.bulid_wall_tool(18,18,18,20)
+//this.bulid_wall_tool(16,20,17,20)
+//this.bulid_wall_tool(11,22,11,24)
+//this.bulid_wall_tool(11,22,11,24)
+//this.bulid_wall_tool(13,22,14,22)
+//this.bulid_wall_tool(13,22,14,22)
+//this.bulid_wall_tool(12,24,16,24)
+//this.bulid_wall_tool(12,24,16,24)
+//this.bulid_wall_tool(16,23,17,23)
+//this.bulid_wall_tool(16,23,17,23)
+//this.bulid_wall_tool(17,22,19,22)
+//this.bulid_wall_tool(17,22,19,22)
+//this.bulid_wall_tool(19,12,21,12)
+//this.bulid_wall_tool(19,12,21,12)
+//this.bulid_wall_tool(20,10,20,10)
+//this.bulid_wall_tool(20,10,20,10)
+//this.bulid_wall_tool(22,10,22,12)
+//this.bulid_wall_tool(22,10,22,12)
+//this.bulid_wall_tool(19,20,20,20)
+//this.bulid_wall_tool(19,20,20,20)
+//this.bulid_wall_tool(20,18,22,18)
+//this.bulid_wall_tool(20,18,22,18)
+//this.bulid_wall_tool(22,19,22,22)
+//this.bulid_wall_tool(22,19,22,22)
+//this.bulid_wall_tool(21,22,21,24)
+//this.bulid_wall_tool(21,22,21,24)
+//this.bulid_wall_tool(20,17,20,14)
+//this.bulid_wall_tool(20,17,20,14)
+//this.bulid_wall_tool(21,14,24,14)
+//this.bulid_wall_tool(21,14,24,14)
+//this.bulid_wall_tool(24,12,24,11)
+//this.bulid_wall_tool(24,12,24,11)
+//this.bulid_wall_tool(10,26,12,26)
+//this.bulid_wall_tool(14,26,18,26)
+//this.bulid_wall_tool(18,25,18,25)
+//this.bulid_wall_tool(19,24,19,24)
+//this.bulid_wall_tool(19,26,23,26)
+//this.bulid_wall_tool(14,27,14,29)
+//this.bulid_wall_tool(14,31,11,31)
+//this.bulid_wall_tool(12,28,12,29)
+//this.bulid_wall_tool(11,28,11,30)
+//this.bulid_wall_tool(12,32,12,33)
+//this.bulid_wall_tool(13,33,16,33)
+//this.bulid_wall_tool(16,32,16,28)
+//this.bulid_wall_tool(18,28,18,34)
+//this.bulid_wall_tool(10,33,10,33)
+//this.bulid_wall_tool(12,34,12,36)
+//this.bulid_wall_tool(11,38,13,38)
+//this.bulid_wall_tool(11,39,11,39)
+//this.bulid_wall_tool(13,40,15,40)
+//this.bulid_wall_tool(11,35,11,36)
+//this.bulid_wall_tool(14,38,14,35)
+//this.bulid_wall_tool(15,35,18,35)
+//this.bulid_wall_tool(20,27,20,30)
+//this.bulid_wall_tool(20,32,22,32)
+//this.bulid_wall_tool(22,31,22,29)
+//this.bulid_wall_tool(24,29,24,26)
+//this.bulid_wall_tool(20,33,20,36)
+//this.bulid_wall_tool(17,39,17,37)
+//this.bulid_wall_tool(18,39,21,39)
+//this.bulid_wall_tool(24,24,24,17)
+//this.bulid_wall_tool(22,16,23,16)
+//this.bulid_wall_tool(22,37,22,34)
+//this.bulid_wall_tool(23,31,26,31)
+//this.bulid_wall_tool(26,30,26,24)
+//this.bulid_wall_tool(25,24,25,24)
+//this.bulid_wall_tool(25,14,27,14)
+//this.bulid_wall_tool(26,15,26,22)
+//this.bulid_wall_tool(25,11,29,11)
+//this.bulid_wall_tool(31,11,34,11)
+//this.bulid_wall_tool(37,10,37,12)
+//this.bulid_wall_tool(34,12,34,14)
+//this.bulid_wall_tool(35,14,38,14)
+//this.bulid_wall_tool(39,13,39,11)
+//this.bulid_wall_tool(39,16,32,16)
+//this.bulid_wall_tool(32,13,32,15)
+//this.bulid_wall_tool(31,12,31,12)
+//this.bulid_wall_tool(30,13,30,13)
+//this.bulid_wall_tool(30,15,28,15)
+//this.bulid_wall_tool(40,18,34,18)
+//this.bulid_wall_tool(32,17,32,19)
+//this.bulid_wall_tool(30,17,28,17)
+//this.bulid_wall_tool(33,20,35,20)
+//this.bulid_wall_tool(37,20,39,20)
+//this.bulid_wall_tool(37,21,37,23)
+//this.bulid_wall_tool(35,22,34,23)
+//this.bulid_wall_tool(22,39,26,39)
+//this.bulid_wall_tool(23,34,26,34)
+//this.bulid_wall_tool(23,36,27,36)
+//this.bulid_wall_tool(28,35,28,35)
+//this.bulid_wall_tool(29,34,29,29)
+//this.bulid_wall_tool(27,31,27,31)
+//this.bulid_wall_tool(27,22,27,22)
+//this.bulid_wall_tool(28,23,28,26)
+//this.bulid_wall_tool(27,27,27,27)
+//this.bulid_wall_tool(19,36,19,36)
+//this.bulid_wall_tool(30,18,30,21)
+//this.bulid_wall_tool(27,19,28,19)
+//this.bulid_wall_tool(31,22,33,22)
+//this.bulid_wall_tool(35,21,35,21)
+//this.bulid_wall_tool(30,24,32,24)
+//this.bulid_wall_tool(29,26,35,26)
+//this.bulid_wall_tool(35,24,35,25)
+//this.bulid_wall_tool(33,24,33,24)
+//this.bulid_wall_tool(27,39,31,39)
+//this.bulid_wall_tool(33,39,36,39)
+//this.bulid_wall_tool(33,39,36,39)
+//this.bulid_wall_tool(25,38,28,38)
+//this.bulid_wall_tool(25,38,28,38)
+//this.bulid_wall_tool(29,36,29,36)
+//this.bulid_wall_tool(29,36,29,36)
+//this.bulid_wall_tool(30,37,30,37)
+//this.bulid_wall_tool(30,37,30,37)
+//this.bulid_wall_tool(31,38,31,38)
+//this.bulid_wall_tool(31,38,31,38)
+//this.bulid_wall_tool(33,38,33,37)
+//this.bulid_wall_tool(33,38,33,37)
+//this.bulid_wall_tool(32,36,32,35)
+//this.bulid_wall_tool(32,36,32,35)
+//this.bulid_wall_tool(31,35,31,33)
+//this.bulid_wall_tool(31,35,31,33)
+//this.bulid_wall_tool(30,31,34,31)
+//this.bulid_wall_tool(30,31,34,31)
+//this.bulid_wall_tool(33,33,33,33)
+//this.bulid_wall_tool(34,34,34,34)
+//this.bulid_wall_tool(35,35,35,37)
+//this.bulid_wall_tool(35,34,35,34)
+//this.bulid_wall_tool(35,34,35,34)
+//this.bulid_wall_tool(30,28,30,28)
+//this.bulid_wall_tool(30,28,30,28)
+//this.bulid_wall_tool(39,29,39,29)
+//this.bulid_wall_tool(39,29,39,29)
+//this.bulid_wall_tool(36,28,38,28)
+//this.bulid_wall_tool(36,28,38,28)
+//this.bulid_wall_tool(40,23,40,23)
+//this.bulid_wall_tool(40,23,40,23)
+//this.bulid_wall_tool(39,24,39,24)
+//this.bulid_wall_tool(37,24,37,26)
+//this.bulid_wall_tool(38,26,39,26)
+//this.bulid_wall_tool(40,27,40,27)
+//this.bulid_wall_tool(40,32,40,34)
+//this.bulid_wall_tool(37,39,37,39)
+//this.bulid_wall_tool(31,40,31,40)
+//this.bulid_wall_tool(38,39,40,39)
+//this.bulid_wall_tool(37,38,37,36)
+//this.bulid_wall_tool(36,29,36,29)
+//	}
+//
 	//컴퓨터용 조작
 	move_direction(){				//방향키중 뭘눌렀는지 확인
 		document.addEventListener('keydown',(event)=>{
@@ -597,7 +673,7 @@ this.bulid_wall_tool(40,32,40,34)
 				this.screen_x -= 1
 				this.player_x -= 1
 			}
-			if(this.place[this.player_x][this.player_y]==="gray"){
+			if(this.place[this.player_y][this.player_x]==="gray"){
 				this.screen_x = past_screen_x
 				this.screen_y = past_screen_y
 				this.player_x = past_player_x
@@ -614,6 +690,7 @@ this.bulid_wall_tool(40,32,40,34)
 		let clientx_2 = 0
 		let clienty_2 = 0
 
+		//처음으로 손댄곳 위치가저오기
 		document.getElementById("html").addEventListener('touchstart',(e)=>{
 			clientx_1 = Math.round(e.touches[0].clientX)
 			clienty_1 = Math.round(e.touches[0].clientY)
@@ -621,41 +698,45 @@ this.bulid_wall_tool(40,32,40,34)
 			clienty_2 = Math.round(e.touches[0].clientY)
 		})
 
+		//움직인곳 가지고오기
 		document.getElementById("html").addEventListener('touchmove', (e)=>{
 			clientx_2 = Math.round(e.touches[0].clientX)
 			clienty_2 = Math.round(e.touches[0].clientY)
 		})
 
+		//첫번째 위치값과 두번째 위치값을 비교해서움직이기
+
+		//대각선움직임가능할때
 		let m_move=setInterval(() => {
-			if(Math.abs(clientx_1-clientx_2)<27){
+			if(Math.abs(clientx_1-clientx_2)<15){
 			} else if(clientx_1<clientx_2){
 				this.screen_x += 1
 				this.player_x += 1
-				if (this.place[this.player_x][this.player_y]==="gray"){
+				if (this.place[this.player_y][this.player_x]==="gray"){
 					this.player_x -= 1
 					this.screen_x-=1
 				}
 			} else if(clientx_1>clientx_2) {
 				this.screen_x -= 1
 				this.player_x -= 1
-				if (this.place[this.player_x][this.player_y]==="gray"){
+				if (this.place[this.player_y][this.player_x]==="gray"){
 					this.player_x += 1
 					this.screen_x += 1
 				}
 			} else {}
 
-			if(Math.abs(clienty_1-clienty_2)<27){
+			if(Math.abs(clienty_1-clienty_2)<15){
 			} else if(clienty_1<clienty_2){
 				this.screen_y += 1
 				this.player_y += 1
-				if (this.place[this.player_x][this.player_y]==="gray"){
+				if (this.place[this.player_y][this.player_x]==="gray"){
 					this.player_y -= 1
 					this.screen_y -= 1
 				}
 			} else if(clienty_1>clienty_2) {
 				this.screen_y -= 1
 				this.player_y -= 1
-				if (this.place[this.player_x][this.player_y]==="gray"){
+				if (this.place[this.player_y][this.player_x]==="gray"){
 					this.player_y += 1
 					this.screen_y += 1
 				}
@@ -751,8 +832,8 @@ this.bulid_wall_tool(40,32,40,34)
 	enter(){		//그리기
 		setInterval(() => {
 			const ctx = this.ctx
-			for (var x=1; x<this.canvas.width/this.blocksize-1; x++){
-				for (var y=1; y<this.canvas.height/this.blocksize-1; y++){
+			for (var x=1; x<this.canvas.height/this.blocksize-1; x++){
+				for (var y=1; y<this.canvas.width/this.blocksize-1; y++){
 					this.color(x,y)
 					ctx.fillRect(x*this.blocksize,y*this.blocksize,this.blocksize,this.blocksize)
 				}
@@ -766,7 +847,7 @@ this.bulid_wall_tool(40,32,40,34)
 	//색값돌려주기
 	color(x,y){
 		const ctx = this.ctx
-		ctx.fillStyle = this.place[this.screen_x+x][this.screen_y+y]
+		ctx.fillStyle = this.place[this.screen_y+y][this.screen_x+x]
 
 	//	console.log(this.now_screen_x,this.now_screen_y)
 	}
@@ -785,14 +866,16 @@ this.bulid_wall_tool(40,32,40,34)
 //
 	}
 
+	//사용자가 위치를 계속찍어주는열할
 	usermode(){
 		const um=document.getElementById("usermode")
-		console.log(1)
 		setInterval(() => {
-			um.innerText=`${this.player_x},${this.player_y}`
+			um.innerHTML=`현재위치:${this.player_x},${this.player_y}`
+			um.innerText+="\n 목표:40,40"
 		}, 100);
 	}
 
+	//계발자모드로바꾸기<=>사용자모드로바꾸기
 	commandmode(judgment){
 		if(judgment==="on"){
 			this.CM="on"
@@ -804,6 +887,8 @@ this.bulid_wall_tool(40,32,40,34)
 			this.usermode_changer()
 		}
 	}
+
+	//벽을 인식가능하게 다시 바꾸기
 	usermode_changer(){
 		for(let i=this.block_gray_width; i<=this.place.length-this.block_gray_width; i++){
 			for(let li = this.block_gray_height; li<=this.place[0].length-this.block_gray_height; li++){
@@ -814,6 +899,7 @@ this.bulid_wall_tool(40,32,40,34)
 		}
 	}
 
+	//벽을 인식하지 못하게바꾸기
 	commandmode_changer(){
 		for(let i=this.block_gray_width; i<=this.place.length-this.block_gray_width; i++){
 			for(let li = this.block_gray_height; li<=this.place[0].length-this.block_gray_height; li++){
@@ -825,6 +911,7 @@ this.bulid_wall_tool(40,32,40,34)
 
 	}
 
+	//벽만드는것을 도와주는놈 1번째 스페이스 와 2번째 스페이스 위치값을 가지고와서 벽을 생성해주고 명령어를 만드는놈
 	commandmode_maker(){
 		const cws=document.getElementById("command_wallmaker_supporter")
 		const cws1=document.getElementById("command_wallmaker_supporter_1")
@@ -877,16 +964,27 @@ this.bulid_wall_tool(40,32,40,34)
 
 	//게임 끝나는것 세팅
 	gameend(){
-		this.place[40][40] = "yellow"
-		this.place[39][40]= "yellow"
 		setInterval(() => {
-			if(this.player_x===39||this.player_x===40){
-				if(this.player_y===40){
-					document.getElementById("command_wallmaker_supporter").innerText="FINISH"
-					this.CM="on"
-				}
+			if(this.level===1){
+				this.place[19][19] = "yellow"
+				const is_game_end = setInterval(() => {
+					if(this.player_x===19&&this.player_y===19){
+						document.getElementById("command_wallmaker_supporter").innerText="FINISH"
+						this.CM="on"
+						//this.end="true"
+						//clearInterval(is_game_end)
+						setTimeout(() => {
+							this.place=[]
+							this.start()
+							this.screen_x=0
+							this.screen_y=0
+							this.player_x=10
+							this.player_y=10
+						}, 3000);
+					}
+				}, 1000);
 			}
-		}, 1000);
+		}, 100);
 	}
 
 	//타이머 만들기
@@ -901,7 +999,7 @@ this.bulid_wall_tool(40,32,40,34)
 		const timer_on_m=setInterval(() => {
 			document.getElementById("html").addEventListener('touchstart',(e)=>{
 				judgment=1
-				clearInterval(timer_on)
+				clearInterval(timer_on_m)
 			})
 		}, 1000); 
 
@@ -910,7 +1008,7 @@ this.bulid_wall_tool(40,32,40,34)
 
 		const timer=document.getElementById("timer")
 
-		setInterval(() => {
+		const timer_writer = setInterval(() => {
 			if(judgment===1){
 				sec+=1
 				if(sec>60){
@@ -919,6 +1017,9 @@ this.bulid_wall_tool(40,32,40,34)
 				}
 			}
 			timer.innerText=`${min<10 ? "0"+min : min} : ${sec<10 ? "0"+sec : sec}`
+			if(this.end==="true"){
+				clearInterval(timer_writer)
+			}
 		}, 1000);
 	}
 }
@@ -927,10 +1028,14 @@ this.bulid_wall_tool(40,32,40,34)
 //	!함수 : 해당 위차의 색 받기
 const gamesetting = new Gamesetting
 function main(){
-	gamesetting.makemap()
-	gamesetting.make_wall_map()
+	gamesetting.start()
+//	gamesetting.makemap()
+//	gamesetting.make_wall_map()
 
-	gamesetting.build_wall()
+//	gamesetting.build_wall()
+
+	gamesetting.map_function()
+
 	gamesetting.bulid_map()
 	gamesetting.make_shadow_map()
 
@@ -960,4 +1065,30 @@ setInterval(() => {
 	}
 }, 100);
 
+function displayHTMLTable(results){
+	var table = "<table class='table'>";
+	var data = results.data;
+	 
+	for(i=0;i<data.length;i++){
+		table+= "<tr>";
+		var row = data[i];
+		var cells = row.join(",").split(",");
+		 
+		for(j=0;j<cells.length;j++){
+			table+= "<td>";
+			table+= cells[j];
+			table+= "</th>";
+		}
+		table+= "</tr>";
+	}
+	table+= "</table>";
+	$("#parsed_csv_list").html(table);
+}
 
+function csfileread(){
+	var url = "test_1.csv"
+	Papa.parse(url, {delimiter: "auto", complete: results => {
+	}})
+}
+
+csfileread()
