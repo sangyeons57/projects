@@ -53,13 +53,20 @@ class Gamesetting{
 	start(){
 		this.level+=1
 
-
 		if(this.level===1){
 			this.makemap(10,10)
 		} else if(this.level===2){
-			this.makemap(10,15)
+			this.makemap(15,10)
 		}else{
 		}
+
+		this.map_function()
+
+		setTimeout(() => {
+			this.enter()
+			this.input_user_draw()
+		}, 100);
+
 	}
 
 	makemap(width,height){		//맵만들기
@@ -78,9 +85,9 @@ class Gamesetting{
 //		}
 		width=width+(this.block_gray_width*2)
 		height=height+(this.block_gray_height*2)
-		for(let i=0; i<width;i++){
+		for(let i=0; i<height;i++){
 			let place_line=[]
-			for(let li=0; li<height;li++){
+			for(let li=0; li<width;li++){
 				if(i%2===0){
 					place_line.push("#04B404")
 				}else{
@@ -89,7 +96,10 @@ class Gamesetting{
 			}
 			this.place.push(place_line)
 		}
+		console.log(this.place.length,this.place[0].length)
+
 		this.bulid_map(width,height)
+
 		for(let i = 1; i<this.canvas.width/this.blocksize; i++){
 			let place_line =[]
 			for(let li = 1; li<this.canvas.height/this.blocksize; li++){
@@ -119,8 +129,8 @@ class Gamesetting{
 		for(let i=this.block_gray_height;i<height-this.block_gray_height+1;i++){	//왼쪽
 			this.place[i].fill("gray", 0, this.block_gray_width)
 		}
-		for(let i=this.block_gray_height; i<width-this.block_gray_height; i++){  //오른쪽
-			this.place[i].fill("gray", width-this.block_gray_height, height)
+		for(let i=this.block_gray_height; i<height-this.block_gray_height; i++){  //오른쪽
+			this.place[i].fill("gray", width-this.block_gray_width, width)
 		}
 		for(let i=height-this.block_gray_height; i<height; i++){  //아레쪽
 			this.place[i].fill("gray", 0,width)
@@ -358,9 +368,8 @@ class Gamesetting{
 
 	map_function(){
 		// map_list[y][x]형식
-		let map_list={
+		let map_list=[
 			
-			1:
 		   //1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0
 		[
 			[0,1,0,0,0,0,0,0,0,0],//1
@@ -374,25 +383,20 @@ class Gamesetting{
 			[0,1,0,0,0,1,0,1,1,0],//9
 			[0,0,0,1,0,1,0,0,1,0]//10
 
-		]
-			,
-			2:
+		] ,
 		[
-			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-		]
+			[0,1,0,0,0,0,1,0,0,0,0,0,0,0,0],
+			[0,1,0,1,1,0,0,0,1,1,1,1,1,1,0],
+			[0,0,0,1,0,0,1,0,0,0,0,0,0,1,0],
+			[0,1,0,0,1,1,0,1,0,1,1,1,0,1,0],
+			[0,0,1,0,0,0,0,1,1,0,0,0,1,0,0],
+			[1,0,1,1,1,1,0,0,0,0,1,0,0,0,1],
+			[0,0,0,0,0,0,1,0,1,0,0,1,1,1,0],
+			[0,1,1,1,1,0,0,1,0,0,1,1,0,0,0],
+			[0,1,0,0,0,1,0,0,1,0,0,0,0,1,0],
+			[0,0,0,1,0,1,1,0,1,0,1,1,1,1,0]
+		] ,
 
-		   ,
-
-		   10:
 		[
 			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//1
 			[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//2
@@ -423,25 +427,59 @@ class Gamesetting{
 			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//27
 			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//28
 			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//29
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//30
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]//30
 		]
-		}
+		]
 
 
-		setInterval(() => {
 			
-			if(this.level===1){
-				for(let i in map_list[1]){
-					for(let li in map_list[1][0]){
-						if(map_list[1][Number(li)][Number(i)]===1){
-							this.place[this.block_gray_height+Number(li)][this.block_gray_width+Number(i)] = "gray"
-						}
-					}
+		for(let i in map_list[this.level-1]){
+			for(let li in map_list[this.level-1][0]){
+				if(map_list[this.level-1][Number(i)][Number(li)]===1){
+					this.place[this.block_gray_height+Number(i)][this.block_gray_width+Number(li)] = "gray"
 				}
 			}
+		}
+	}
 
-
-		}, 100);
+	//게임 끝나는것 세팅
+	gameend(){
+		const is_game_end = setInterval(() => {
+			if(this.level===1){
+				this.place[19][19] = "yellow"
+					if(this.player_x===19&&this.player_y===19){
+						//this.end="true"
+						this.CM="on"
+						setTimeout(() => {
+							this.place=[]
+							this.start()
+							this.screen_x=0
+							this.screen_y=0
+							this.player_x=10
+							this.player_y=10
+							this.CM="off"
+						}, 500);
+					}
+			}else if(this.level===2){
+				this.place[19][24] = "yellow"
+				const is_game_end = setInterval(() => {
+					if(this.player_x===24&&this.player_y===19){
+						//this.end="true"
+						this.CM="on"
+						setTimeout(() => {
+							this.place=[]
+							this.start()
+							clearInterval(is_game_end)
+							this.screen_x=0
+							this.screen_y=0
+							this.player_x=10
+							this.player_y=10
+							this.CM="off"
+						}, 500);
+					}
+				}, 1000);
+			}
+		}, 1000);
 	}
 
 
@@ -829,41 +867,28 @@ class Gamesetting{
 	}
 
 
+	input_user_draw(){
+		document.addEventListener('keydown',(event)=>{
+			this.enter()
+		});
+	}
+	
 	enter(){		//그리기
-		setInterval(() => {
-			const ctx = this.ctx
-			for (var x=1; x<this.canvas.height/this.blocksize-1; x++){
-				for (var y=1; y<this.canvas.width/this.blocksize-1; y++){
-					this.color(x,y)
-					ctx.fillRect(x*this.blocksize,y*this.blocksize,this.blocksize,this.blocksize)
-				}
-			}
-			ctx.fillStyle = "blue"
-			ctx.fillRect(this.half_width*this.blocksize,this.half_height*this.blocksize,this.blocksize,this.blocksize)
-			this.make_shadow()
-		}, 100);
-	}
-
-	//색값돌려주기
-	color(x,y){
 		const ctx = this.ctx
-		ctx.fillStyle = this.place[this.screen_y+y][this.screen_x+x]
-
-	//	console.log(this.now_screen_x,this.now_screen_y)
+		for (var x=1; x<this.canvas.height/this.blocksize-1; x++){
+			for (var y=1; y<this.canvas.width/this.blocksize-1; y++){
+				ctx.fillStyle = this.place[this.screen_y+y][this.screen_x+x]
+				ctx.fillRect(x*this.blocksize,y*this.blocksize,this.blocksize,this.blocksize)
+			}
+		}
+		ctx.fillStyle = "blue"
+		ctx.fillRect(this.half_width*this.blocksize,this.half_height*this.blocksize,this.blocksize,this.blocksize)
+		this.make_shadow()
 	}
+
 
 	//input 받기
 	user_input(){
-//		const onoff=document.getElementById("shadowOnOff")
-//		onoff.addEventListener("mouseup",(e)=>{
-//			console.log(onoff.value)
-//			if(onoff.value === "on"){
-//				onoff.value = "off"
-//			}else if(onoff.value === "off"){
-//				onoff.value = "on"
-//			}
-//		})
-//
 	}
 
 	//사용자가 위치를 계속찍어주는열할
@@ -879,13 +904,13 @@ class Gamesetting{
 	commandmode(judgment){
 		if(judgment==="on"){
 			this.CM="on"
-			this.commandmode_maker()
 			this.commandmode_changer()
 		}else if(judgment==="off"){
 			this.CM="off"
 			this.usermode()
 			this.usermode_changer()
 		}
+		this.enter()
 	}
 
 	//벽을 인식가능하게 다시 바꾸기
@@ -901,91 +926,66 @@ class Gamesetting{
 
 	//벽을 인식하지 못하게바꾸기
 	commandmode_changer(){
-		for(let i=this.block_gray_width; i<=this.place.length-this.block_gray_width; i++){
-			for(let li = this.block_gray_height; li<=this.place[0].length-this.block_gray_height; li++){
-				if(this.place[i][li]==="gray"){
-					this.place[i][li]="Gray"
+		for(let i=this.block_gray_width; i<this.place.length-this.block_gray_width; i++){
+			for(let li = this.block_gray_height; li<this.place[0].length-this.block_gray_height; li++){
+				if(this.place[i][li]=== "gray"){
+					this.place[i][li]= "Gray"
 				}
 			}
 		}
-
 	}
 
-	//벽만드는것을 도와주는놈 1번째 스페이스 와 2번째 스페이스 위치값을 가지고와서 벽을 생성해주고 명령어를 만드는놈
-	commandmode_maker(){
-		const cws=document.getElementById("command_wallmaker_supporter")
-		const cws1=document.getElementById("command_wallmaker_supporter_1")
-		let storage=[]
-		let s_storage=[]
-		let step = 0
-		document.addEventListener('keydown',(e)=>{
-			if(e.code==="Space"){
-				if(step === 0){
-					storage.push(this.player_x,this.player_y)
-					cws.innerText=`(${this.player_x},${this.player_y})`
-					step=1
-				} else if(step === 1){
-					storage.push(this.player_x,this.player_y)
+//	//벽만드는것을 도와주는놈 1번째 스페이스 와 2번째 스페이스 위치값을 가지고와서 벽을 생성해주고 명령어를 만드는놈
+//	commandmode_maker(){
+//		const cws=document.getElementById("command_wallmaker_supporter")
+//		const cws1=document.getElementById("command_wallmaker_supporter_1")
+//		let storage=[]
+//		let s_storage=[]
+//		let step = 0
+//		document.addEventListener('keydown',(e)=>{
+//			if(e.code==="Space"){
+//				if(step === 0){
+//					storage.push(this.player_x,this.player_y)
+//					cws.innerText=`(${this.player_x},${this.player_y})`
+//					step=1
+//				} else if(step === 1){
+//					storage.push(this.player_x,this.player_y)
+//
+//					s_storage=storage
+//					s_storage.push(cws1)
+//
+//					cws.innerText+=`(${this.player_x},${this.player_y})`
+//					cws1.innerText+=`this.bulid_wall_tool(${storage[0]},${storage[1]},${storage[2]},${storage[3]})\n`
+//
+//					for(let i = storage[0];i<=storage[2];i++){
+//						for(let li = storage[1]; li<=storage[3]; li++){
+//							this.place[i][li]="#FF0000"
+//						}
+//					}
+//
+//					for(let i = storage[2];i>=storage[0];i--){
+//						for(let li = storage[3]; li>=storage[1]; li--){
+//							this.place[i][li]="#FF0000"
+//						}
+//					}
+//					for(let i = storage[2];i>=storage[0];i--){
+//						for(let li = storage[3]; li<=storage[1]; li++){
+//							this.place[i][li]="#FF0000"
+//						}
+//					}
+//					for(let i = storage[2];i<=storage[0];i++){
+//						for(let li = storage[3]; li>=storage[1]; li--){
+//							this.place[i][li]="#FF0000"
+//						}
+//					}
+//
+//					storage=[]
+//					step=0
+//				}
+//			}
+//		})
+//	}
 
-					s_storage=storage
-					s_storage.push(cws1)
-
-					cws.innerText+=`(${this.player_x},${this.player_y})`
-					cws1.innerText+=`this.bulid_wall_tool(${storage[0]},${storage[1]},${storage[2]},${storage[3]})\n`
-
-					for(let i = storage[0];i<=storage[2];i++){
-						for(let li = storage[1]; li<=storage[3]; li++){
-							this.place[i][li]="#FF0000"
-						}
-					}
-
-					for(let i = storage[2];i>=storage[0];i--){
-						for(let li = storage[3]; li>=storage[1]; li--){
-							this.place[i][li]="#FF0000"
-						}
-					}
-					for(let i = storage[2];i>=storage[0];i--){
-						for(let li = storage[3]; li<=storage[1]; li++){
-							this.place[i][li]="#FF0000"
-						}
-					}
-					for(let i = storage[2];i<=storage[0];i++){
-						for(let li = storage[3]; li>=storage[1]; li--){
-							this.place[i][li]="#FF0000"
-						}
-					}
-
-					storage=[]
-					step=0
-				}
-			}
-		})
-	}
-
-	//게임 끝나는것 세팅
-	gameend(){
-		setInterval(() => {
-			if(this.level===1){
-				this.place[19][19] = "yellow"
-				const is_game_end = setInterval(() => {
-					if(this.player_x===19&&this.player_y===19){
-						document.getElementById("command_wallmaker_supporter").innerText="FINISH"
-						this.CM="on"
-						//this.end="true"
-						//clearInterval(is_game_end)
-						setTimeout(() => {
-							this.place=[]
-							this.start()
-							this.screen_x=0
-							this.screen_y=0
-							this.player_x=10
-							this.player_y=10
-						}, 3000);
-					}
-				}, 1000);
-			}
-		}, 100);
-	}
 
 	//타이머 만들기
 	time_counter(){
@@ -1034,7 +1034,6 @@ function main(){
 
 //	gamesetting.build_wall()
 
-	gamesetting.map_function()
 
 	gamesetting.bulid_map()
 	gamesetting.make_shadow_map()
@@ -1045,7 +1044,6 @@ function main(){
 	gamesetting.move_direction()
 
 	gamesetting.draw_backgroud()
-	gamesetting.enter()
 
 	gamesetting.user_input()
 	gamesetting.time_counter()
@@ -1053,42 +1051,16 @@ function main(){
 
 main()
 
-gamesetting.commandmode("off")
-setInterval(() => {
-	if(document.getElementById("command").value==="1"){
-		document.getElementById("command").value=""
-		gamesetting.commandmode("on")
+let cm = "off"
+gamesetting.commandmode(cm)
+document.getElementById("command").addEventListener("click",()=>{
+	if(cm ==="off"){
+		cm="on"
+		gamesetting.commandmode(cm)
+	} else if(cm === "on"){
+		cm="off"
+		gamesetting.commandmode(cm)
 	}
-	if(document.getElementById("command").value==="0"){
-		document.getElementById("command").value=""
-		gamesetting.commandmode("off")
-	}
-}, 100);
+})
 
-function displayHTMLTable(results){
-	var table = "<table class='table'>";
-	var data = results.data;
-	 
-	for(i=0;i<data.length;i++){
-		table+= "<tr>";
-		var row = data[i];
-		var cells = row.join(",").split(",");
-		 
-		for(j=0;j<cells.length;j++){
-			table+= "<td>";
-			table+= cells[j];
-			table+= "</th>";
-		}
-		table+= "</tr>";
-	}
-	table+= "</table>";
-	$("#parsed_csv_list").html(table);
-}
 
-function csfileread(){
-	var url = "test_1.csv"
-	Papa.parse(url, {delimiter: "auto", complete: results => {
-	}})
-}
-
-csfileread()
